@@ -5,8 +5,8 @@
 import pygame.font
 import os
 p = os.getcwd()
-from filefinder import get_path
-from turrets import *
+from .filefinder import get_path
+from .turrets import *
 
 # ------ Nomenclature ------
 
@@ -17,6 +17,9 @@ data codes :
 2 = entry
 3 = exit
 '''
+
+# tower-defense path
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 turret_dict = [BasicSmall(),
 				BasicMedium(),

@@ -5,8 +5,8 @@
 from os import getcwd
 p = getcwd()
 
-from filefinder import get_path
-from classes_utilities import GraphicButton
+from .filefinder import get_path
+from .classes_utilities import GraphicButton
 
 # ------ Fonctions ------
 	

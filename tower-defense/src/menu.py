@@ -7,11 +7,6 @@ import pygame
 import os, sys
 from time import sleep
 
-srcPath = os.getcwd()
-
-if srcPath not in sys.path:
-    sys.path.append(mainPath)
-
 if sys.platform == "win32": #si sous windows,
     # on a besoin de ce module pour le standalone
     import pygame._view
@@ -19,10 +14,10 @@ if sys.platform == "win32": #si sous windows,
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 
-from constants import *
-from classes_utilities import Message, Button, Cursor, Score
-from boucle_level import Instance
-from filefinder import get_path
+from .constants import *
+from .classes_utilities import Message, Button, Cursor, Score
+from .boucle_level import Instance
+from .filefinder import get_path
 
 # ------ Functions ------
 
@@ -140,4 +135,3 @@ def run_game():
 
 if __name__ == "__main__":
     run_game()
-    sys.path.remove(srcPath)

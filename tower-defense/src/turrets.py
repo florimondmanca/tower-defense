@@ -6,8 +6,8 @@ import pygame
 import math
 from os import getcwd
 p = getcwd()
-from filefinder import load_image
-from entity import Turret
+from .filefinder import load_image
+from .entity import Turret
 
 # ------ Tourelles ------
 

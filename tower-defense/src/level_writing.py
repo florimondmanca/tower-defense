@@ -5,7 +5,7 @@
 from os import getcwd
 p = getcwd()
 
-from filefinder import get_path
+from .filefinder import get_path
 
 # ------ Nomenclature ------
 

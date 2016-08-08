@@ -3,13 +3,11 @@
 # ------ Importations ------
 
 import pygame
-from os import getcwd
 
-path = getcwd()
-from filefinder import load_image
-from constants import *
-from classes_utilities import *
-from importation import import_level, import_mob , import_turrets
+from .filefinder import load_image
+from .constants import *
+from .classes_utilities import *
+from .importation import import_level, import_mob , import_turrets
 
 # ------ Classe Principale ------
 

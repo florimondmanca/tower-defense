@@ -11,15 +11,9 @@ import pygame
 
 def main_path():
     """
-    Retourne le chemin du dossier source du jeu
+    Retourne le chemin du dossier racine du jeu
     """
-    main_path_split = os.getcwd().split(os.sep)
-    while main_path_split[-1] != "BubbleRush":
-        main_path_split.pop()
-    main_path = ""
-    for elt in main_path_split:
-        main_path += elt + os.sep
-    return main_path[:-len(os.sep)]
+    return os.path.dirname(os.path.dirname(__file__))
 
 
 # 2. Le pathfinder

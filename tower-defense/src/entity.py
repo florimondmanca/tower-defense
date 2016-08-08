@@ -6,7 +6,7 @@ import pygame
 import math
 from os import getcwd
 p = getcwd()
-from filefinder import load_image
+from .filefinder import load_image
 
 class Turret:
     '''Classe de base des tourelles posables par le joueur '''

@@ -8,8 +8,8 @@ from os import getcwd
 p = getcwd()
 
 from copy import copy
-from constants import *
-from filefinder import load_image
+from .constants import *
+from .filefinder import load_image
 
 class Message(pygame.sprite.Sprite):
 	'''
