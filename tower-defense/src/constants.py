@@ -4,7 +4,6 @@
 
 import pygame.font
 import os
-p = os.getcwd()
 from .filefinder import get_path
 from .turrets import *
 
@@ -57,11 +56,11 @@ red = (250,0,0)
 
 pygame.font.init()
 
-drawFont = pygame.font.Font(get_path("speculum.ttf"), 100)
+drawFont = pygame.font.Font(get_path("static/fonts/speculum.ttf"), 100)
 
-textFont = pygame.font.Font(get_path("speculum.ttf"),  18)
-textFont2 = pygame.font.Font(get_path("speculum.ttf"), 15)
+textFont = pygame.font.Font(get_path("static/fonts/speculum.ttf"),  18)
+textFont2 = pygame.font.Font(get_path("static/fonts/speculum.ttf"), 15)
 
-creditFont = pygame.font.Font(get_path("speculum.ttf"), 12)
+creditFont = pygame.font.Font(get_path("static/fonts/speculum.ttf"), 12)
 
-titleFont = pygame.font.Font(get_path("speculum.ttf"), 40)
+titleFont = pygame.font.Font(get_path("static/fonts/speculum.ttf"), 40)

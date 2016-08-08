@@ -93,7 +93,7 @@ def run_game():
     """
     pygame.mixer.init()
     musicChannel = pygame.mixer.Channel(0)
-    musicSound = pygame.mixer.Sound(get_path("TicTacToe_theme.wav"))
+    musicSound = pygame.mixer.Sound(get_path("static/sounds/TicTacToe_theme.wav"))
     pygame.display.set_caption("BubbleRush")
     clock = pygame.time.Clock()
     hw = screenSize[0]//2

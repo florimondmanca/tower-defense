@@ -14,7 +14,7 @@ def convert(string):
 	return [int(x) for x in string.strip().split(" ")]
 
 def import_level(n):
-	texte = open(get_path("level{0}.txt".format(n)), mode='r')
+	texte = open(get_path("levels/level{0}.txt".format(n)), mode='r')
 	data = []
 	for i in range(60):
 		string = texte.readline()
@@ -22,7 +22,7 @@ def import_level(n):
 	return data
 
 def import_mob(level,wave):
-	texte = open(get_path("level{0}.txt".format(level)), mode='r')
+	texte = open(get_path("levels/level{0}.txt".format(level)), mode='r')
 	for i in range(60+wave-1):
 		texte.readline()
 	data = texte.readline().strip().split(" ")
