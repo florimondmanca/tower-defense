@@ -4,6 +4,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 IMG_DIR = os.path.join(BASE_DIR, *["static", "img"])
 MAPS_DIR = os.path.join(BASE_DIR, *["static", "maps"])
+MAP_EXT = ".tdmap"
 
 # General game constants
 FPS = 30

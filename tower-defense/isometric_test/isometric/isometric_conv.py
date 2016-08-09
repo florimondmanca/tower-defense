@@ -8,10 +8,13 @@ class Map:
 	"""
 	Represents a 2D map made out of tiles.
 	"""
-	def __init__(self, width=5, height=5):
+	def __init__(self, width=5, height=5, tiles=None):
 		self.width = width
 		self.height = height
-		self.tiles = [[tlib.terrain_tiles["none"] for y in range(height)] for x in range(width)]
+		if tiles is None:
+			self.tiles = [[tlib.terrain_tiles["none"] for y in range(height)] for x in range(width)]
+		else:
+			self.tiles = tiles
 
 	@staticmethod
 	def create_plain(tile_type, width, height):
@@ -24,9 +27,65 @@ class Map:
 
 	@staticmethod
 	def import_map(map_name):
-		""" Imports a map 'map_name' from the static/maps folder. """
-		pass
-		#with open(os.path.join(cst.MAPS_DIR, map_name), 'r') as mapfile:
+		""" Imports a map 'map_name' from the static/maps folder. map_name must end with '.tdmap' """
+		if not map_name.endswith(cst.MAP_EXT):
+			raise TypeError("Cannot import map with name {}. Map names must end with '{}'.".format(map_name, cst.MAP_EXT))
+		# used to check later on that all values are present in map file
+		found = {"WIDTH": False, "HEIGHT": False, "TILE_TYPES": False, "TILES_ARRAY": False}
+		# fetch values from the .map file
+		with open(os.path.join(cst.MAPS_DIR, map_name), 'r') as mapfile:
+			l = mapfile.readline()
+			while l != "END_OF_FILE":
+				# if empty line, just skip it
+				if l == "":
+					l = mapfile.readline()
+					continue
+				# fetch width
+				elif l == "WIDTH":
+					width = int(mapfile.readline())
+					found[l] = True
+				# fetch height
+				elif l == "HEIGHT":
+					height = int(mapfile.readline())
+					found[l] = True
+				# fetch the tile_types dictionnary
+				elif l == "TILE_TYPES":
+					tile_types = {}
+					l = mapfile.readline()
+					while l != "END":
+						symbol, category, tile_type = l.split()
+						tile_types[sybmol] = (category, tile_type)
+						l = mapfile.readline()
+					found[l] = True
+				# fetch the symbolic tiles array
+				elif l == "TILES_ARRAY":
+					tiles_symb = []
+					l = mapfile.readline()
+					while l != "END":
+						tiles_symb.append(list(l))
+						l = mapfile.readline()
+					assert len(tiles_symb) == width, "Widths do not correspond !"
+					if height > 0:
+						assert len(tiles_symb[0]) == height, "Heights do not correspond !"
+					found[l] = True
+
+		# check that all values were successfully fetched
+		for to_find, val in found.items():
+			not_found = []
+			if not val:
+				not_found.append(to_find)
+			if not_found:
+				raise NameError("Could not import map {} as the following is missing :\n{}".format(map_name, not_found))
+
+		# assign TilePatch tiles to a 2D array from symbolic tiles
+		tiles = []
+		for x in range(width):
+			row = []
+			for y in range(height):
+				row.append(TilePatch(*tile_types[tiles_symb[x][y]]))
+			tiles.append(row)
+
+		return Map(width=width, height=height, tiles=tiles)
 
 	def __getitem__(self, pos):
 		""" Allows direct access to the tiles, e.g. some_map[x, y] instead of some_map.tiles[x][y]. If y is not passed (some_map[x]), returns the complete row some_map.tiles[x]. """
@@ -67,22 +126,24 @@ class TestGame:
 		self.clock = pygame.time.Clock()
 		self.screen_width = cst.SCREEN_WIDTH
 		self.screen_height = cst.SCREEN_HEIGHT
+		# init the tiles library
 		tlib = TilesLibrary()
 		# init the cartesian map (2D array as a dict)
-		self.map = Map.create_plain("grass", cst.MAP_WIDTH, cst.MAP_HEIGHT)
-		self.init_map()
+		self.map = Map.import_map("map0.tdmap")
+		#self.init_map()
 
 	def init_map(self):
+		# only used for testing
 		self.map[0, 0] = "bridgeNorth"
-		self.map[0, 1] = "water"
+		self.map[0, 1] = "none"
 
 	def update(self):
 		pass
 
 	def display(self):
 		self.screen.fill(pygame.Color("white"))
-		for x in range(self.map.width):
-			for y in range(self.map.height):
+		for y in range(self.map.height):
+			for x in range(self.map.width):
 				cart_x = cst.TILE_SIZE * x
 				cart_y = cst.TILE_SIZE * y
 				iso_x = (cart_x - cart_y)

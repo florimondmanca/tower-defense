@@ -1,0 +1,28 @@
+WIDTH
+10
+HEIGHT
+10
+
+TILE_TYPES
+0 terrain_tile grass
+1 terrain_tile roadNorth
+2 terrain_tile roadEast
+3 terrain_tile roadTEast
+4 terrain_tile roadCornerNW
+a terrain_tile water
+END
+
+TILES_ARRAY
+0100000010
+010aaaa010
+0100000010
+0100000010
+0100000010
+0322222240
+0100000000
+0100000000
+0100000000
+0100000000
+END
+
+END_OF_FILE
