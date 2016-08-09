@@ -1,4 +1,5 @@
+import sys
 from . import isometric
 
-def main():
-	isometric.TestGame().run()
+def main(map_name):
+	isometric.TestGame(map_name).run()

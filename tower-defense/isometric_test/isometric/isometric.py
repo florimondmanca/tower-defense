@@ -10,7 +10,7 @@ class TestGame:
 	"""
 	Runs a game for testing isometric perspective
 	"""
-	def __init__(self):
+	def __init__(self, map_name):
 		# init pygame, screen and clock
 		pygame.init()
 		self.screen = cst.SCREEN
@@ -18,7 +18,7 @@ class TestGame:
 		self.screen_width = cst.SCREEN_WIDTH
 		self.screen_height = cst.SCREEN_HEIGHT
 		# init the map
-		self.map = Map.import_map("basic.tdmap")
+		self.map = Map.import_map(map_name)
 		#self.map = Map.create_plain("grass", 10, 10); self.init_map()
 
 	def init_map(self):

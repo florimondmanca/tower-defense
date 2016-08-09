@@ -55,7 +55,11 @@ Par exemple, prenons une map carrée de 100 cases de côté et calculons les coo
 
 ### Premiers tests
 
-Voir `test_results_img/basic_isometric_rendering.png`. 
+Ça donne quelque chose comme ça sur une map rentrée à la main.
+
+![](img/test1.png)
+
+Les lignes rouges et bleues indiquent juste le centre de l'écran. La position initiale d'une map carrée comme celle-ci a pu changer avec les nouvelles versions de l'affichage.
 
 ### Bibliothèque de cases (TilePatch, TileLibrary)
 
@@ -90,18 +94,23 @@ TILE_TYPES
 # exemple :
 0 terrain grass
 1 terrain roadNorth
+2 terrain dirt
 END  # terminer par END
 
 TILES_ARRAY
 """indiquer la map sous forme matricielle en utilisant
 les symboles"""
 # exemple :
-00000
+20000
 11111
-00000
+20000
 END  # terminer par END
 
 END_OF_FILE  # termine le fichier
 ```
 
-Actuellement, sur la `TILES_ARRAY`,  le nord pointe vers la gauche, le sud vers la droite, le 
+Actuellement, sur la `TILES_ARRAY`,  le nord pointe vers la gauche, le sud vers la droite, l'est vers le haut et l'ouest vers le bas.
+
+Voici ce que donne l'exemple ci-dessus (on peut y avoir la correspondance des directions entre `TILES_ARRAY` et la vue isométrique).
+
+![](img/docmap.png)
