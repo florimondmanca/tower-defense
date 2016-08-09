@@ -14,7 +14,7 @@ class Map:
 		self.width = width
 		self.height = height
 		if tiles is None:
-			self.tiles = [[tlib.terrain_tiles["none"] for y in range(height)] for x in range(width)]
+			self.tiles = [[tlib.terrain_tiles[cst.NONE_TILE] for y in range(height)] for x in range(width)]
 		else:
 			self.tiles = tiles
 

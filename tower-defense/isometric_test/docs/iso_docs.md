@@ -109,7 +109,10 @@ END  # terminer par END
 END_OF_FILE  # termine le fichier
 ```
 
-Actuellement, sur la `TILES_ARRAY`,  le nord pointe vers la gauche, le sud vers la droite, l'est vers le haut et l'ouest vers le bas.
+Actuellement, voici les conventions de la rose des vents :
+
+- le nord est en haut sur la `TILES_ARRAY`
+- le nord est vers le coin supérieur droit sur le rendu isométrique
 
 Voici ce que donne l'exemple ci-dessus (on peut y avoir la correspondance des directions entre `TILES_ARRAY` et la vue isométrique).
 
