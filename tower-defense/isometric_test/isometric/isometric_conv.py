@@ -12,6 +12,9 @@ class TilePatch:
 		self.tile_type = tile_type
 		self.image, self.rect = utils.load_image(tile_path)
 
+	def __str__(self):
+		return "TilePatch: {}".format(self.tile_type)
+
 
 class TileLibrary:
 	"""
@@ -33,6 +36,7 @@ class TileLibrary:
 				if f.endswith(".png"):
 					tile_type = f.replace(".png", "")
 					terrain_tiles[tile_type] = TilePatch(tile_path=os.path.join(root, f), tile_type=tile_type)
+					print(tile_type, terrain_tiles[tile_type])
 		# (extend to load more categories of tile types)
 		return terrain_tiles
 
@@ -53,11 +57,11 @@ class TestGame:
 		# init the tile library (containing all the tile patches)
 		self.tlib = TileLibrary()
 		# init the cartesian map (2D array as a dict)
-		self.cartmap = [[self.tlib.terrain_tiles["grass"] for x in range(self.map_width)] for y in range(self.map_height)]
+		self.cartmap = [[self.tlib.terrain_tiles["grass"] for y in range(self.map_height)] for x in range(self.map_width)]
 		self.init_map()
 
 	def init_map(self):
-		self.cartmap[10][10] = self.cartmap[10][11] = self.tlib.terrain_tiles["bridgeNorth"]
+		pass #self.cartmap[3][3] = self.cartmap[3][4] = self.tlib.terrain_tiles["bridgeNorth"]
 
 	def update(self):
 		pass
@@ -68,10 +72,12 @@ class TestGame:
 			for y in range(self.map_height):
 				cart_x = cst.TILE_SIZE*x
 				cart_y = cst.TILE_SIZE*y
-				iso_x = self.screen_width//2 + (cart_x - cart_y)
-				iso_y = self.screen_height//2 + (cart_x + cart_y)/2
-				rect = pygame.Rect(iso_x, iso_y, cst.TILE_SIZE/2, cst.TILE_SIZE)
+				iso_x = (cart_x - cart_y) + self.screen_width//2 - cst.TILE_SIZE
+				iso_y = (cart_x + cart_y)/2 #+ (self.screen_height//2 + cst.TILE_SIZE)/2 # uncomment to center y=0 on the center of the screen
+				rect = pygame.Rect(iso_x, iso_y, cst.TILE_SIZE, cst.TILE_SIZE/2)
 				self.screen.blit(self.cartmap[x][y].image, rect)
+		pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
+		pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
 
 	def run(self):
 		while True:

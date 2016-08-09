@@ -22,7 +22,11 @@ La taille de chaque case étant choisie (ex: 50px*50px), le plus simple sera d'u
 
 ## Projection isométrique
 
-Il s'agit effectivement d'une **projection** : on passe d'une vue top-down (2D classique) à une vue isométrique. Pour cela, **la caméra pivote de 45°à gauche ou à droite** (les diagonales de la map forment un + au lieu d'un x) **puis de 30°vers le bas**. Ces angles sont choisis pour que les cases forment des losanges 2x plus larges qu'ils ne sont hauts.
+### Le principe
+
+Il s'agit effectivement d'une **projection** : on passe d'une vue top-down (2D classique, cartésienne) à une vue isométrique. Pour cela, **la caméra pivote de 45°à gauche ou à droite** (les diagonales de la map forment un + au lieu d'un x) **puis de 30°vers le bas**. Ces angles sont choisis pour que les cases forment des **losanges 2x plus larges qu'ils ne sont hauts**.
+
+> Conséquence importante : un `Rect(top, left, width, height)` a une largeur et hauteur isométrique de `(width, height/2)`. Donc les cases ont une taille cartésienne `(TILE_SIZE, TILE_SIZE)` et une taille isométrique `(TILE_SIZE, TILE_SIZE/2)`.
 
 Ces angles étant donnés, on peut déterminer une relation directe entre les coordonnées cartésiennes `(x, y)` d'une case et ses coordonnées isométriques `(xi, yi)` (ces coordonnées étant en effet les coordonnées "à l'écran") :
 
@@ -37,6 +41,8 @@ x = (2*yi + xi) / 2
 y = (2*yi - xi) / 2
 ```
 
+On voit donc bien que ** $x$ peut varier de `- TILE_SIZE` à `+ TILE_SIZE`**, et qu'en revanche **$y$ varie entre `0` et `+ TILE_SIZE`**.
+
 Par exemple, prenons une map carrée de 100 cases de côté et calculons les coordonnées isométriques de chaque coin :
 
 
@@ -47,3 +53,6 @@ Par exemple, prenons une map carrée de 100 cases de côté et calculons les coo
 |`(0, 100)`|`(-100, -50)`|
 |`(100, 100)`|`(0, 100)`|
 
+### Premiers tests
+
+Voir `test_results_img/basic_isometric_rendering.png`. 
