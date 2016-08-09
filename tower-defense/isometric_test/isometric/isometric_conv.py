@@ -1,48 +1,8 @@
 import os
+import pygame
 from . import constants as cst
 from . import utils
 
-# class TerrainTile:
-# 	"""
-# 	An object representing a terrain tile on the map.
-# 	Attributes are :
-# 		tile_type (string)
-# 		pos (Cartesian position (x, y))
-# 		iso_pos (Isometric position (iso_x, iso_y))
-# 	"""
-# 	pos = None  # (float, float)
-# 	iso_pos = None  # (float, float)
-# 	tile_type = "grass"  # string
-
-# 	def __init__(self, tile_type=None, pos=None, iso_pos=None):
-# 		# init positions from args
-# 		self.pos = pos
-# 		self.iso_pos = iso_pos
-# 		# calculate final positions
-# 		self._calculate_positions()
-# 		# init tile type
-# 		if tile_type is not None:
-# 			self.tile_type = tile_type
-# 		self.image, self.rect = utils.load_image(self.tile_type)
-
-# 	def _calculate_positions(self):
-# 		"""
-# 		Calculates the final positions (cartesian and isometric). They should not change in the future.
-# 		"""
-# 		if self.pos is None:
-# 			if self.iso_pos is None:
-# 				self.pos = (0, 0)
-# 				self.iso_pos = self.cart_to_iso(self.pos)
-# 			else:
-# 				self.pos = self.iso_to_cart(self.iso_pos)
-# 		else:
-# 			self.iso_pos = self.cart_to_iso(self.pos)
-
-# 	def cart_to_iso(self, pos):
-# 		return (pos[0] - pos[1], (pos[0] + pos[1])/2)
-
-# 	def iso_to_cart(self):
-# 		return ((2*pos[1] + pos[0]) 2, (2*pos[1] - pos[0])/2)
 
 class TilePatch:
 	"""
@@ -77,22 +37,23 @@ class TileLibrary:
 		return terrain_tiles
 
 
-class TestGame(object):
+class TestGame:
 	"""
 	Runs a game for testing isometric perspective
 	"""
 	def __init__(self):
-		super(Viewer, self).__init__()
 		# init pygame, screen and clock
 		pygame.init()
 		self.screen = pygame.display.set_mode(cst.SCREEN_SIZE)
 		self.clock = pygame.time.Clock()
+		self.screen_width = cst.SCREEN_WIDTH
+		self.screen_height = cst.SCREEN_HEIGHT
 		self.map_width = cst.MAP_WIDTH
 		self.map_height = cst.MAP_HEIGHT
 		# init the tile library (containing all the tile patches)
 		self.tlib = TileLibrary()
 		# init the cartesian map (2D array as a dict)
-		self.cartmap = [[self.tlib.terrain_tiles["grass"]) for x in range(self.map_width)] for y in range(self.map_height)]
+		self.cartmap = [[self.tlib.terrain_tiles["grass"] for x in range(self.map_width)] for y in range(self.map_height)]
 		self.init_map()
 
 	def init_map(self):
@@ -102,9 +63,15 @@ class TestGame(object):
 		pass
 
 	def display(self):
+		self.screen.fill(pygame.Color("white"))
 		for x in range(self.map_width):
 			for y in range(self.map_height):
-				self.screen.blit(self.cartmap[x][y].image, pygame.Rect(cst.TILE_SIZE*x, cst.TILE_SIZE*y, TILE_SIZE, TILE_SIZE))
+				cart_x = cst.TILE_SIZE*x
+				cart_y = cst.TILE_SIZE*y
+				iso_x = self.screen_width//2 + (cart_x - cart_y)
+				iso_y = self.screen_height//2 + (cart_x + cart_y)/2
+				rect = pygame.Rect(iso_x, iso_y, cst.TILE_SIZE/2, cst.TILE_SIZE)
+				self.screen.blit(self.cartmap[x][y].image, rect)
 
 	def run(self):
 		while True:
@@ -116,7 +83,3 @@ class TestGame(object):
 			self.update()
 			self.display()
 			pygame.display.flip()
-
-if __name__ == '__main__':
-	v = Viewer()
-	v.run()
