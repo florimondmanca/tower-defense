@@ -61,7 +61,9 @@ class TestGame:
 		self.init_map()
 
 	def init_map(self):
-		pass #self.cartmap[3][3] = self.cartmap[3][4] = self.tlib.terrain_tiles["bridgeNorth"]
+		self.cartmap[0][0] = self.tlib.terrain_tiles["bridgeNorth"]
+		self.cartmap[3][3] = self.cartmap[3][4] = self.tlib.terrain_tiles["water"]
+		self.cartmap[3][1] = self.tlib.terrain_tiles["none"]
 
 	def update(self):
 		pass
@@ -72,9 +74,9 @@ class TestGame:
 			for y in range(self.map_height):
 				cart_x = cst.TILE_SIZE*x
 				cart_y = cst.TILE_SIZE*y
-				iso_x = (cart_x - cart_y) + self.screen_width//2 - cst.TILE_SIZE
-				iso_y = (cart_x + cart_y)/2 #+ (self.screen_height//2 + cst.TILE_SIZE)/2 # uncomment to center y=0 on the center of the screen
-				rect = pygame.Rect(iso_x, iso_y, cst.TILE_SIZE, cst.TILE_SIZE/2)
+				iso_x = (cart_x - cart_y) + self.screen_width//2
+				iso_y = (cart_x + cart_y)/2
+				rect = pygame.Rect(iso_x, iso_y, self.cartmap[x][y].rect.width, self.cartmap[x][y].rect.height)
 				self.screen.blit(self.cartmap[x][y].image, rect)
 		pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
 		pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
