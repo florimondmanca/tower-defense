@@ -13,6 +13,7 @@ FPS = 30
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 TILE_SIZE = 50  # pixels
-MAP_WIDTH, MAP_HEIGHT = 20, 20
-MAP_SIZE = (MAP_WIDTH, MAP_HEIGHT)
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # set a screen now (needed for the TilesLibrary)
+
+# Map system-related constants
+cst.NONE_TILE = "none"  # the name of the blank tile (must be in terrain folder)

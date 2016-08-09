@@ -24,7 +24,7 @@ class TestGame:
 	def init_map(self):
 		# only used for testing
 		self.map[0, 0] = "roadCornerNW"
-		self.map[0, 1] = "none"
+		self.map[0, 1] = cst.NONE_TILE
 
 	def update(self):
 		pass
