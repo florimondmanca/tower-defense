@@ -1,4 +1,4 @@
-from . import isometric_conv
+from . import isometric
 
 def main():
-	isometric_conv.TestGame().run()
+	isometric.TestGame().run()

@@ -1,12 +1,14 @@
 import os
-import pygame
 from . import constants as cst
-from .tiles_library import TilePatch, TilesLibrary
+from .tileslibrary import tlib
+from .tilepatch import TilePatch
 
 
 class Map:
 	"""
 	Represents a 2D map made out of tiles.
+	Ascending X : South
+	Ascending Y : West
 	"""
 	def __init__(self, width=5, height=5, tiles=None):
 		self.width = width
@@ -27,47 +29,51 @@ class Map:
 
 	@staticmethod
 	def import_map(map_name):
-		""" Imports a map 'map_name' from the static/maps folder. map_name must end with '.tdmap' """
+		""" Imports a map 'map_name' from the static/maps folder. map_name must end with {} """.format(cst.MAP_EXT)
 		if not map_name.endswith(cst.MAP_EXT):
 			raise TypeError("Cannot import map with name {}. Map names must end with '{}'.".format(map_name, cst.MAP_EXT))
 		# used to check later on that all values are present in map file
 		found = {"WIDTH": False, "HEIGHT": False, "TILE_TYPES": False, "TILES_ARRAY": False}
 		# fetch values from the .map file
 		with open(os.path.join(cst.MAPS_DIR, map_name), 'r') as mapfile:
-			l = mapfile.readline()
+			l = mapfile.readline().strip()
 			while l != "END_OF_FILE":
 				# if empty line, just skip it
 				if l == "":
-					l = mapfile.readline()
+					l = mapfile.readline().strip()
 					continue
 				# fetch width
 				elif l == "WIDTH":
-					width = int(mapfile.readline())
-					found[l] = True
+					width = int(mapfile.readline().strip())
+					found["WIDTH"] = True
 				# fetch height
 				elif l == "HEIGHT":
-					height = int(mapfile.readline())
-					found[l] = True
+					height = int(mapfile.readline().strip())
+					found["HEIGHT"] = True
 				# fetch the tile_types dictionnary
 				elif l == "TILE_TYPES":
 					tile_types = {}
-					l = mapfile.readline()
+					l = mapfile.readline().strip()
 					while l != "END":
 						symbol, category, tile_type = l.split()
-						tile_types[sybmol] = (category, tile_type)
-						l = mapfile.readline()
-					found[l] = True
+						tile_types[symbol] = (category, tile_type)
+						l = mapfile.readline().strip()
+					found["TILE_TYPES"] = True
 				# fetch the symbolic tiles array
 				elif l == "TILES_ARRAY":
 					tiles_symb = []
-					l = mapfile.readline()
+					l = mapfile.readline().strip()
 					while l != "END":
 						tiles_symb.append(list(l))
-						l = mapfile.readline()
+						l = mapfile.readline().strip()
+					# must transpose columns and rows
+					tiles_symb = list(map(list, zip(*tiles_symb)))
+					# check dimensions are OK with the ones declared
 					assert len(tiles_symb) == width, "Widths do not correspond !"
 					if height > 0:
 						assert len(tiles_symb[0]) == height, "Heights do not correspond !"
-					found[l] = True
+					found["TILES_ARRAY"] = True
+				l = mapfile.readline().strip()
 
 		# check that all values were successfully fetched
 		for to_find, val in found.items():
@@ -112,58 +118,3 @@ class Map:
 		for y in range(self.height):
 			for x in range(self.width):
 				yield self.tiles[x][y]
-
-
-class TestGame:
-	"""
-	Runs a game for testing isometric perspective
-	"""
-	def __init__(self):
-		# init pygame, screen and clock
-		global tlib
-		pygame.init()
-		self.screen = pygame.display.set_mode(cst.SCREEN_SIZE)
-		self.clock = pygame.time.Clock()
-		self.screen_width = cst.SCREEN_WIDTH
-		self.screen_height = cst.SCREEN_HEIGHT
-		# init the tiles library
-		tlib = TilesLibrary()
-		# init the cartesian map (2D array as a dict)
-		self.map = Map.import_map("map0.tdmap")
-		#self.init_map()
-
-	def init_map(self):
-		# only used for testing
-		self.map[0, 0] = "bridgeNorth"
-		self.map[0, 1] = "none"
-
-	def update(self):
-		pass
-
-	def display(self):
-		self.screen.fill(pygame.Color("white"))
-		for y in range(self.map.height):
-			for x in range(self.map.width):
-				cart_x = cst.TILE_SIZE * x
-				cart_y = cst.TILE_SIZE * y
-				iso_x = (cart_x - cart_y)
-				iso_y = (cart_x + cart_y)/2
-				rect = pygame.Rect(0, 0, self.map[x, y].rect.width, self.map[x, y].rect.height)
-				rect.centerx = iso_x + self.screen_width//2
-				rect.centery = iso_y + self.screen_height//2
-				self.screen.blit(self.map[x, y].image, rect)
-
-		# mid-screen lines (optional, just for landmark)
-		pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
-		pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
-
-	def run(self):
-		while True:
-			self.clock.tick(cst.FPS)
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					pygame.quit()
-					return
-			self.update()
-			self.display()
-			pygame.display.flip()

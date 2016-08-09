@@ -56,3 +56,52 @@ Par exemple, prenons une map carrée de 100 cases de côté et calculons les coo
 ### Premiers tests
 
 Voir `test_results_img/basic_isometric_rendering.png`. 
+
+### Bibliothèque de cases (TilePatch, TileLibrary)
+
+Comme dit précédemment, on va utiliser des cases pré-fabriquées qu'on aura qu'à blitter à l'écran pour l'affichage : ce sont les `TilePatch`.
+Un `TilePatch` associe simplement une image et un rect à une catégorie de case ("terrain", "building", etc.) et à un nom de case ("grass", "wallRock", "roadCornerNW", etc.).
+
+Le dossier d'images de cases est situé `static/img/tiles`. Chaque catégorie de cases est un sous-dossier du dossier `tiles`.
+
+Le fichier `tileslibrary` construit automatiquement tous les TilePatches à partir du contenu du dossier `tiles`.
+
+Chaque catégorie a alors son propre dictionnaire qui est un attribut de l'objet `tlib`. Par exemple, pour obtenir le `TilePatch` de la case "grass" (qui est de la catégorie "terrain"), on utilise : `tlib.terrain_tiles["grass"]`. Et pour utiliser le `tlib` dans un module, on écrit `from .tileslibrary import tlib`. Je trouve ça assez simple d'utilisation et le fait que tout soit lié à la structure du dossier `tiles` permet de s'y retrouver assez facilement (même si c'était assez compliqué à coder ^^).
+
+### Système de maps
+
+Pour pouvoir tester l'isométrique, j'ai implémenté un mini-système de maps.
+
+Un fichier de map est un fichier d'extension `.map`. Chaque fichier `.map` doit être construit de la même manière :
+
+```python
+WIDTH
+"""donner la largeur de la map (nombre entier)"""
+# exemple :
+5
+HEIGHT
+"""donner la largeur de la map (nombre entier)"""
+# exemple :
+3
+
+TILE_TYPES
+"""indiquer les types de cases utilisées comme suit :
+<symbole> <catégorie> <tile_type>"""
+# exemple :
+0 terrain grass
+1 terrain roadNorth
+END  # terminer par END
+
+TILES_ARRAY
+"""indiquer la map sous forme matricielle en utilisant
+les symboles"""
+# exemple :
+00000
+11111
+00000
+END  # terminer par END
+
+END_OF_FILE  # termine le fichier
+```
+
+Actuellement, sur la `TILES_ARRAY`,  le nord pointe vers la gauche, le sud vers la droite, le 
