@@ -1,8 +1,7 @@
 import os
 import pygame
 from . import constants as cst
-from . import utils
-from . import tiles_library as tlib
+from .tiles_library import TilePatch, TilesLibrary
 
 
 class Map:
@@ -10,19 +9,20 @@ class Map:
 	Represents a 2D map made out of tiles.
 	"""
 	def __init__(self, width=5, height=5):
-		self.width = 5
-		self.height = 5
+		self.width = width
+		self.height = height
 		self.tiles = [[tlib.terrain_tiles["none"] for y in range(height)] for x in range(width)]
 
-	@classmethod
+	@staticmethod
 	def create_plain(tile_type, width, height):
+		""" Creates a 'width'*'height' map with only one tile type. """
 		new_map = Map(width=width, height=height)
 		for x in range(width):
 			for y in range(height):
 				new_map.tiles[x][y] = tlib.terrain_tiles[tile_type]
 		return new_map
 
-	@classmethod
+	@staticmethod
 	def import_map(map_name):
 		""" Imports a map 'map_name' from the static/maps folder. """
 		pass
@@ -61,11 +61,13 @@ class TestGame:
 	"""
 	def __init__(self):
 		# init pygame, screen and clock
+		global tlib
 		pygame.init()
 		self.screen = pygame.display.set_mode(cst.SCREEN_SIZE)
 		self.clock = pygame.time.Clock()
 		self.screen_width = cst.SCREEN_WIDTH
 		self.screen_height = cst.SCREEN_HEIGHT
+		tlib = TilesLibrary()
 		# init the cartesian map (2D array as a dict)
 		self.map = Map.create_plain("grass", cst.MAP_WIDTH, cst.MAP_HEIGHT)
 		self.init_map()
@@ -79,16 +81,15 @@ class TestGame:
 
 	def display(self):
 		self.screen.fill(pygame.Color("white"))
-
-		for y in range(self.map.height):
-			for x in range(self.map.width):
+		for x in range(self.map.width):
+			for y in range(self.map.height):
 				cart_x = cst.TILE_SIZE * x
 				cart_y = cst.TILE_SIZE * y
 				iso_x = (cart_x - cart_y)
 				iso_y = (cart_x + cart_y)/2
 				rect = pygame.Rect(0, 0, self.map[x, y].rect.width, self.map[x, y].rect.height)
 				rect.centerx = iso_x + self.screen_width//2
-				rect.centerx = iso_y + self.screen_height//2
+				rect.centery = iso_y + self.screen_height//2
 				self.screen.blit(self.map[x, y].image, rect)
 
 		# mid-screen lines (optional, just for landmark)
