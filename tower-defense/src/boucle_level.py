@@ -6,7 +6,7 @@ import pygame
 
 from .filefinder import load_image
 from .constants import *
-from .classes_utilities import Message, Button, GraphicButton, Cursor
+from .classes_utilities import Message, Button, GraphicButton, Cursor, Score
 from .importation import import_level, import_mob , import_turrets
 
 # ------ Classe Principale ------
