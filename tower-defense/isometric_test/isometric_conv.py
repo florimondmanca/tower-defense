@@ -44,14 +44,13 @@ from . import utils
 # 	def iso_to_cart(self):
 # 		return ((2*pos[1] + pos[0]) 2, (2*pos[1] - pos[0])/2)
 
-
 class TilePatch:
 	"""
 	An object representing a tile patch (that we shall stick to the map later on)
 	"""
 	def __init__(self, tile_path, tile_type):
 		self.tile_type = tile_type
-		self.image, self.rect = utils.load_image
+		self.image, self.rect = utils.load_image(tile_path)
 
 
 class TileLibrary:
@@ -73,26 +72,39 @@ class TileLibrary:
 			for f in files:
 				if f.endswith(".png"):
 					tile_type = f.replace(".png", "")
-					terrain_tiles[tile_type] = TilePatch(tile_path=root, tile_type=tile_type)
+					terrain_tiles[tile_type] = TilePatch(tile_path=os.path.join(root, f), tile_type=tile_type)
 		# (extend to load more categories of tile types)
 		return terrain_tiles
 
 
-class Viewer(object):
+class TestGame(object):
 	"""
-	Runs a test for isometric perspective
+	Runs a game for testing isometric perspective
 	"""
 	def __init__(self):
 		super(Viewer, self).__init__()
+		# init pygame, screen and clock
 		pygame.init()
 		self.screen = pygame.display.set_mode(cst.SCREEN_SIZE)
 		self.clock = pygame.time.Clock()
+		self.map_width = cst.MAP_WIDTH
+		self.map_height = cst.MAP_HEIGHT
+		# init the tile library (containing all the tile patches)
+		self.tlib = TileLibrary()
+		# init the cartesian map (2D array as a dict)
+		self.cartmap = [[self.tlib.terrain_tiles["grass"]) for x in range(self.map_width)] for y in range(self.map_height)]
+		self.init_map()
+
+	def init_map(self):
+		self.cartmap[10][10] = self.cartmap[10][11] = self.tlib.terrain_tiles["bridgeNorth"]
 
 	def update(self):
 		pass
 
 	def display(self):
-		pass
+		for x in range(self.map_width):
+			for y in range(self.map_height):
+				self.screen.blit(self.cartmap[x][y].image, pygame.Rect(cst.TILE_SIZE*x, cst.TILE_SIZE*y, TILE_SIZE, TILE_SIZE))
 
 	def run(self):
 		while True:
@@ -103,6 +115,7 @@ class Viewer(object):
 					return
 			self.update()
 			self.display()
+			pygame.display.flip()
 
 if __name__ == '__main__':
 	v = Viewer()
