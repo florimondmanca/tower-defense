@@ -2,43 +2,57 @@ import os
 import pygame
 from . import constants as cst
 from . import utils
+from . import tiles_library as tlib
 
 
-class TilePatch:
+class Map:
 	"""
-	An object representing a tile patch (that we shall stick to the map later on)
+	Represents a 2D map made out of tiles.
 	"""
-	def __init__(self, tile_path, tile_type):
-		self.tile_type = tile_type
-		self.image, self.rect = utils.load_image(tile_path)
+	def __init__(self, width=5, height=5):
+		self.width = 5
+		self.height = 5
+		self.tiles = [[tlib.terrain_tiles["none"] for y in range(height)] for x in range(width)]
 
-	def __str__(self):
-		return "TilePatch: {}".format(self.tile_type)
+	@classmethod
+	def create_plain(tile_type, width, height):
+		new_map = Map(width=width, height=height)
+		for x in range(width):
+			for y in range(height):
+				new_map.tiles[x][y] = tlib.terrain_tiles[tile_type]
+		return new_map
 
+	@classmethod
+	def import_map(map_name):
+		""" Imports a map 'map_name' from the static/maps folder. """
+		pass
+		#with open(os.path.join(cst.MAPS_DIR, map_name), 'r') as mapfile:
 
-class TileLibrary:
-	"""
-	An object that loads tiles and stores them.
-	"""
-	def __init__(self):
-		self.terrain_tiles = self.init_tiles()  # dict
+	def __getitem__(self, pos):
+		""" Allows direct access to the tiles, e.g. some_map[x, y] instead of some_map.tiles[x][y]. If y is not passed (some_map[x]), returns the complete row some_map.tiles[x]. """
+		if isinstance(pos, tuple):
+			x, y = pos
+			return self.tiles[x][y]
+		else:
+			return self.tiles[pos]
 
-	def init_tiles(self):
-		"""
-		Loads all available tiles in dicts.
-		Currently loads :
-			terrain_tiles
-		"""
-		# load terrain tiles
-		terrain_tiles = dict()
-		for root, dirs, files in os.walk(os.path.join(cst.BASE_DIR, *["static", "img", "terrain_tiles"])):
-			for f in files:
-				if f.endswith(".png"):
-					tile_type = f.replace(".png", "")
-					terrain_tiles[tile_type] = TilePatch(tile_path=os.path.join(root, f), tile_type=tile_type)
-					print(tile_type, terrain_tiles[tile_type])
-		# (extend to load more categories of tile types)
-		return terrain_tiles
+	def __setitem__(self, pos, tile_type, tile_category="terrain_tiles"):
+		""" Allows direct replacement of a tile using its tile_type, i.e. a string value. Looks for tile_type in the tlib.<tile_category> dictionnary.
+		If pos is a (x, y) tuple, changes the tile at (x, y).
+		If only x is passed, changes the whole row to the given tile. """
+		if isinstance(pos, tuple):
+			x, y = pos
+			self.tiles[x][y] = getattr(tlib, tile_category)[tile_type]
+		else:
+			x = pos
+			for y in range(self.height):
+				self.tiles[x][y] = getattr(tlib, tile_category)[tile_type]
+
+	def __iter__(self):
+		""" Iterates over the map tiles, in descending depth (y) order. """
+		for y in range(self.height):
+			for x in range(self.width):
+				yield self.tiles[x][y]
 
 
 class TestGame:
@@ -52,32 +66,32 @@ class TestGame:
 		self.clock = pygame.time.Clock()
 		self.screen_width = cst.SCREEN_WIDTH
 		self.screen_height = cst.SCREEN_HEIGHT
-		self.map_width = cst.MAP_WIDTH
-		self.map_height = cst.MAP_HEIGHT
-		# init the tile library (containing all the tile patches)
-		self.tlib = TileLibrary()
 		# init the cartesian map (2D array as a dict)
-		self.cartmap = [[self.tlib.terrain_tiles["grass"] for y in range(self.map_height)] for x in range(self.map_width)]
+		self.map = Map.create_plain("grass", cst.MAP_WIDTH, cst.MAP_HEIGHT)
 		self.init_map()
 
 	def init_map(self):
-		self.cartmap[0][0] = self.tlib.terrain_tiles["bridgeNorth"]
-		self.cartmap[3][3] = self.cartmap[3][4] = self.tlib.terrain_tiles["water"]
-		self.cartmap[3][1] = self.tlib.terrain_tiles["none"]
+		self.map[0, 0] = "bridgeNorth"
+		self.map[0, 1] = "water"
 
 	def update(self):
 		pass
 
 	def display(self):
 		self.screen.fill(pygame.Color("white"))
-		for x in range(self.map_width):
-			for y in range(self.map_height):
-				cart_x = cst.TILE_SIZE*x
-				cart_y = cst.TILE_SIZE*y
-				iso_x = (cart_x - cart_y) + self.screen_width//2
+
+		for y in range(self.map.height):
+			for x in range(self.map.width):
+				cart_x = cst.TILE_SIZE * x
+				cart_y = cst.TILE_SIZE * y
+				iso_x = (cart_x - cart_y)
 				iso_y = (cart_x + cart_y)/2
-				rect = pygame.Rect(iso_x, iso_y, self.cartmap[x][y].rect.width, self.cartmap[x][y].rect.height)
-				self.screen.blit(self.cartmap[x][y].image, rect)
+				rect = pygame.Rect(0, 0, self.map[x, y].rect.width, self.map[x, y].rect.height)
+				rect.centerx = iso_x + self.screen_width//2
+				rect.centerx = iso_y + self.screen_height//2
+				self.screen.blit(self.map[x, y].image, rect)
+
+		# mid-screen lines (optional, just for landmark)
 		pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
 		pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
 

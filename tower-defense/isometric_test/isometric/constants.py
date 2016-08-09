@@ -2,6 +2,8 @@ import os
 
 # Filesystem-related constants
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+IMG_DIR = os.path.join(BASE_DIR, *["static", "img"])
+MAPS_DIR = os.path.join(BASE_DIR, *["static", "maps"])
 
 # General game constants
 FPS = 30
