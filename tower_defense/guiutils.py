@@ -28,17 +28,17 @@ class Message(pygame.sprite.Sprite):
 	A class for manipulating text messages and bring them on screen easily.
 	:param parent: the Surface on which the text is plotted.
 	:param msg: the actual text to display.
-	:param font=textFont: font of the message.
+	:param font=TEXT_FONT: font of the message.
 	:param color: color of the message.
 	'''
-	def __init__(self, msg, center, font=cst.textFont, color=cst.WHITE):
+	def __init__(self, msg, center, font=cst.TEXT_FONT, color=cst.WHITE):
 		self.text = msg
 		self.font = font
 		self.image = font.render(msg, True, color)
 		self.rect = self.image.get_rect()
 		self.rect.center = center
 
-	def changeMessage(self, newMsg, font=cst.textFont, color=cst.WHITE):
+	def changeMessage(self, newMsg, font=cst.TEXT_FONT, color=cst.WHITE):
 		self.text = newMsg
 		self.image = font.render(newMsg, True, color)
 		self.rect = self.image.get_rect(center=self.rect.center)
@@ -75,10 +75,10 @@ class Button:
 	A clickable button which highlights itself when mouse flies over it.
 	:param text: the actual text to display.
 	:param center: the center point of the button.
-	:param font=textFont: font of the button.
+	:param font=TEXT_FONT: font of the button.
 	:param color=white: color of the button.
 	"""
-	def __init__(self, text, center, font=cst.textFont, color=cst.WHITE):
+	def __init__(self, text, center, font=cst.TEXT_FONT, color=cst.WHITE):
 		self.text = text
 		self.font = font
 		self.rect = font.render(text, True, color).get_rect()
@@ -122,7 +122,7 @@ class Button:
 class GraphicButton:
 	'''Bouton de selection d'une tourelle dans la GUI '''
 
-	def __init__(self,topleft, data_number, font=cst.textFont2):
+	def __init__(self,topleft, data_number, font=cst.TEXT_FONT_2):
 
 		self.data = turret_dict[data_number]  #La tourelle associée au bouton
 		self.preview = self.data.preview  # Image réelle de la tourelle
@@ -174,7 +174,7 @@ class Cursor(pygame.sprite.Sprite):
 	"""
 	A textual cursor which will follow the mouse's moves.
 	:param parent: the Surface which the cursor belongs to.
-	:param font=textFont: the text font.
+	:param font=TEXT_FONT: the text font.
 	:param color=blue: the text color.
 	"""
 	def __init__(self, parent):

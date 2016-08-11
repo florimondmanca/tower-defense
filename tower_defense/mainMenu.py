@@ -12,7 +12,7 @@ pygame.init()
 screen = pygame.display.set_mode((800,600))
 
 import constants as cst
-from pygameUtilities import Message, Button, Cursor, Score
+from guiutils import Message, Button, Cursor, Score
 from instance import Instance
 
 # ------ Functions ------
@@ -25,14 +25,14 @@ def options(screen,clock):
     """
 
     hw = cst.SCREEN_WIDTH//2
-    optionsMessage = Message("Options", (hw, cst.CASE_SIZE), font=cst.titleFont)
+    optionsMessage = Message("Options", (hw, cst.CASE_SIZE), font=cst.TITLE_FONT)
     musicMessage = Message("Music:  ", (hw, int(1.5*cst.CASE_SIZE)))
     musicButton = Button("ON", (musicMessage.rect.right, int(1.5*cst.CASE_SIZE)))
     menuButton = Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
     creditsMessage1 = Message( "Game by Guillaume Coiffier and Florimond Manca",
-        (hw, 4*cst.CASE_SIZE-24-2), font=creditFont)
+        (hw, 4*cst.CASE_SIZE-24-2), font=cst.CREDIT_FONT)
     creditsMessage2 = Message( "Music by Florimond Manca",
-        (hw, 4*cst.CASE_SIZE-12), font=creditFont)
+        (hw, 4*cst.CASE_SIZE-12), font=cst.CREDIT_FONT)
 
     while True:
         clock.tick(cst.FPS)
@@ -63,11 +63,11 @@ def instructions(screen, clock):
     """
     hw = cst.SCREEN_WIDTH//2
     instructionsMessage = Message("Instructions", (hw, cst.CASE_SIZE),
-        font=cst.titleFont)
+        font=cst.TITLE_FONT)
     instructions1 = Message("this is a message",
-        (hw, int(1.5*cst.CASE_SIZE)), font=creditFont)
+        (hw, int(1.5*cst.CASE_SIZE)), font=cst.CREDIT_FONT)
     instructions2 = Message("this is an other message",
-        (hw, 18+int(1.5*cst.CASE_SIZE)), font=creditFont)
+        (hw, 18+int(1.5*cst.CASE_SIZE)), font=cst.CREDIT_FONT)
     menuButton = Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
     while True:
         clock.tick(cst.FPS)
@@ -94,7 +94,7 @@ def run_game():
     clock = pygame.time.Clock()
     hw = cst.SCREEN_WIDTH//2
     title = Message("BubbleRush", (hw, cst.CASE_SIZE//2),
-                    font=cst.titleFont)
+                    font=cst.TITLE_FONT)
     playButton = Button("Play", (hw, int(1.5*cst.CASE_SIZE)))
     instructionsButton = Button("Instructions", (hw, 2*cst.CASE_SIZE))
     optionsButton = Button("Options", (hw, int(2.5*cst.CASE_SIZE)))

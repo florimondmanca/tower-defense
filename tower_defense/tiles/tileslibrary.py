@@ -1,11 +1,11 @@
 import os
 from collections import namedtuple
 import constants as cst
-from .tilepatch import TilePatch
+from . import utils
 
 
 """
-The tiles library contains all Tile Patches available from static/img/tiles.
+The tiles library contains all pairs of (image, rects) available from static/img/tiles.
 Usage:
 from .tileslibrary import tlib
 """
@@ -20,7 +20,8 @@ for cat in cst.TILE_CATEGORIES:
 		for f in files:
 			if f.endswith(".png"):
 				tile_type = f.replace(".png", "")
-				getattr(tlib, cat+"_tiles")[tile_type] = TilePatch(category=cat, tile_type=tile_type)
+				image, rect = utils.load_image(os.path.join(cst.IMG_DIR, *["tiles", cat, f]))
+				getattr(tlib, cat+"_tiles")[tile_type] = [image, rect]
 	print("OK")
 
 print("-- LOADING FINISHED : Tiles library --")

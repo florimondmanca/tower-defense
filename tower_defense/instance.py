@@ -5,7 +5,7 @@
 import pygame
 
 import constants as cst
-from pygameUtilities import load_image, Message, Button, GraphicButton, Cursor, Score
+from guiutils import load_image, Message, Button, GraphicButton, Cursor, Score
 from tiles.map import *
 
 # ------ Classe Principale ------
@@ -14,7 +14,7 @@ class Instance:
 	"""
 	Runs a game for testing isometric perspective
 	"""
-	def __init__(self, map_name):
+	def __init__(self, map_name="basic.map"):
 		# init pygame, screen and clock
 		pygame.init()
 		self.screen = cst.SCREEN
