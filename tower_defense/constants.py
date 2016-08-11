@@ -33,10 +33,10 @@ NONE_TILE_PATH = os.path.join(IMG_DIR, *["tiles", "none", "none.png"])
 
 # Colors
 PAPER = (255, 245, 168)
-TURQUOISE = (37, 154, 141)
-WHITE = (255, 255, 255)
+TURQUOISE = pygame.Color("turquoise")
+WHITE = pygame.Color("white")
 GREY = (165, 185, 185)
-BLACK = (50, 55, 70)
+BLACK = pygame.Color("black")
 BLUE = (20, 60, 110)
 RED = (250,0,0)
 
