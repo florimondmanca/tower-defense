@@ -1,6 +1,5 @@
 import os
 import constants as cst
-from .tileslibrary import tlib
 from .tile import Tile
 
 class Map:
@@ -14,7 +13,7 @@ class Map:
 		self.width = width
 		self.height = height
 		if tiles is None:
-			self.tiles = dict(((x, y), Tile(pos=(x*cst.TILE_SIZE, y*cst.TILE_SIZE))) for x in range(width) for y in range(height))
+			self.tiles = dict(((x, y), Tile(pos=(x*cst.TILE_SIZE + cst.SCREEN_WIDTH//2, y*cst.TILE_SIZE + cst.SCREEN_HEIGHT//2))) for x in range(width) for y in range(height))
 		else:
 			self.tiles = tiles
 
@@ -29,6 +28,7 @@ class Map:
 	@staticmethod
 	def import_map(map_name):
 		""" Imports a map 'map_name' from the static/maps folder. map_name must end with {} """.format(cst.MAP_EXT)
+		print("\nImporting map '{}'...".format(map_name))
 		if not map_name.endswith(cst.MAP_EXT):
 			raise TypeError("Cannot import map with name {}. Map names must end with '{}'.".format(map_name, cst.MAP_EXT))
 		# used to check later on that all values are present in map file
@@ -82,13 +82,17 @@ class Map:
 			if not_found:
 				raise NameError("Could not import map {} as the following is missing :\n{}".format(map_name, not_found))
 
-		# assign TilePatch tiles to a 2D array from symbolic tiles
+		# assign tiles to a dict from symbolic tiles
 		tiles = {}
 		for x in range(width):
 			for y in range(height):
 				cat, tile_type = tile_types[tiles_symb[x][y]]
 				tiles[x, y] = Tile(pos=(x*cst.TILE_SIZE, y*cst.TILE_SIZE), category=cat, tile_type=tile_type)
-
+		# correct a weird bug
+		for tile in tiles.values():
+			tile.rect.center = tile.iso_pos
+		# we're done !
+		print("Map import is successful !")
 		return Map(width=width, height=height, tiles=tiles)
 
 
@@ -102,7 +106,7 @@ class Map:
 			return self.tiles[x, 0]
 
 	def __setitem__(self, pos, category, tile_type):
-		""" Allows direct replacement of a tile using its tile_type, i.e. a string value. Looks for tile_type in the tlib.<tile_category> dictionnary.
+		""" Allows direct replacement of a tile using its tile_type, i.e. a string value.
 		If pos is a (x, y) tuple, changes the tile at (x, y).
 		If only x is passed, changes the whole row to the given tile. """
 		if isinstance(pos, tuple):
@@ -114,6 +118,6 @@ class Map:
 
 	def __iter__(self):
 		""" Iterates over the map tiles, in descending depth (y) order. """
-		for y in range(self.height):
-			for x in range(self.width):
+		for x in range(self.width):
+			for y in range(self.height):
 				yield self.tiles[x, y]

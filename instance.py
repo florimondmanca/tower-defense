@@ -7,6 +7,7 @@ import pygame
 import constants as cst
 from guiutils import load_image, Message, Button, GraphicButton, Cursor, Score
 from tiles.map import *
+from entities import mob
 
 # ------ Classe Principale ------
 
@@ -23,32 +24,24 @@ class Instance:
 		self.screen_height = cst.SCREEN_HEIGHT
 		# init the map
 		self.map = Map.import_map(map_name)
-		#self.map = Map.create_plain("grass", 10, 10); self.init_map()
-
-	def init_map(self):
-		# only used for testing
-		self.map[0, 0] = "roadCornerNW"
-		self.map[0, 1] = "none"
+		self.mobs = pygame.sprite.Group()
+		self.mobs.add(mob.ChaserMob(pos=(300, 400), target=self.map[1, 0]))
 
 	def update(self):
-		pass
+		self.mobs.update()
 
 	def display(self):
 		self.screen.fill(pygame.Color("white"))
-		for y in range(self.map.height):
-			for x in range(self.map.width):
-				cart_x = cst.TILE_SIZE * x
-				cart_y = cst.TILE_SIZE * y
-				iso_x = (cart_x - cart_y)
-				iso_y = (cart_x + cart_y)/2
-				rect = pygame.Rect(0, 0, self.map[x, y].rect.width, self.map[x, y].rect.height)
-				rect.centerx = iso_x + self.screen_width//2
-				rect.centery = iso_y + self.screen_height//2
-				self.screen.blit(self.map[x, y].image, rect)
+		for tile in self.map:
+			tile.display(self.screen)
 
 		# mid-screen lines (optional, just for landmark)
 		pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
 		pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
+
+		# display mobs
+		for mob in self.mobs:
+			mob.display(self.screen)
 
 
 

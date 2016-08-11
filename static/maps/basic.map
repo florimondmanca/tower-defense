@@ -6,10 +6,6 @@ HEIGHT
 TILE_TYPES
 0 terrain grass
 1 terrain roadNorth
-2 terrain roadEast
-3 terrain roadTEast
-4 terrain roadCornerNW
-a terrain water
 END
 
 TILES_ARRAY
