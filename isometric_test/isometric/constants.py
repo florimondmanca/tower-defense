@@ -17,3 +17,4 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # set a screen 
 
 # Map system-related constants
 NONE_TILE = "none"  # the name of the blank tile (must be in terrain folder)
+NONE_TILE_PATH = os.path.join(IMG_DIR, *["tiles", "none", "none.png"])

@@ -3,7 +3,6 @@ import pygame
 from . import constants as cst
 from . import utils
 from .tileslibrary import tlib
-from .tilepatch import TilePatch
 from .map import Map
 from .player import Mob
 

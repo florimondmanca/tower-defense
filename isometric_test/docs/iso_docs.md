@@ -61,16 +61,17 @@ Par exemple, prenons une map carrée de 100 cases de côté et calculons les coo
 
 Les lignes rouges et bleues indiquent juste le centre de l'écran. La position initiale d'une map carrée comme celle-ci a pu changer avec les nouvelles versions de l'affichage.
 
-### Bibliothèque de cases (TilePatch, TileLibrary)
+### Bibliothèque de cases (Tile, TileLibrary)
 
-Comme dit précédemment, on va utiliser des cases pré-fabriquées qu'on aura qu'à blitter à l'écran pour l'affichage : ce sont les `TilePatch`.
-Un `TilePatch` associe simplement une image et un rect à une catégorie de case ("terrain", "building", etc.) et à un nom de case ("grass", "wallRock", "roadCornerNW", etc.).
+Màj (le 11/08/2016)
 
 Le dossier d'images de cases est situé `static/img/tiles`. Chaque catégorie de cases est un sous-dossier du dossier `tiles`.
 
-Le fichier `tileslibrary` construit automatiquement tous les TilePatches à partir du contenu du dossier `tiles`.
+Le fichier `tileslibrary` construit automatiquement autant de dictionnaires de tiles qu'il y a de sous-dossiers dans le dossier `tiles`. Chaque dictionnaire est un attribut de l'objet `tlib`. Ce qui est stocké dans ces dictionnaire est une association entre le nom de la tile et le couple (image, rect) associé qui a été pré-chargé.
 
-Chaque catégorie a alors son propre dictionnaire qui est un attribut de l'objet `tlib`. Par exemple, pour obtenir le `TilePatch` de la case "grass" (qui est de la catégorie "terrain"), on utilise : `tlib.terrain_tiles["grass"]`. Et pour utiliser le `tlib` dans un module, on écrit `from .tileslibrary import tlib`. Je trouve ça assez simple d'utilisation et le fait que tout soit lié à la structure du dossier `tiles` permet de s'y retrouver assez facilement (même si c'était assez compliqué à coder ^^).
+Par exemple, pour obtenir l'image et le rect de la case "grass" (qui est de la catégorie "terrain"), on utilise : `tlib.terrain_tiles["grass"]`. Et pour utiliser le `tlib` dans un module, on écrit `from .tileslibrary import tlib`.
+
+On a ainsi construit la classe `Tile` qui dérive de `IsoSprite`, en récupérant le `image` et le `rect` depuis la `tlib`.
 
 ### Système de maps
 
@@ -82,11 +83,11 @@ Un fichier de map est un fichier d'extension `.map`. Chaque fichier `.map` doit 
 WIDTH
 """donner la largeur de la map (nombre entier)"""
 # exemple :
-5
+3
 HEIGHT
 """donner la largeur de la map (nombre entier)"""
 # exemple :
-3
+5
 
 TILE_TYPES
 """indiquer les types de cases utilisées comme suit :
@@ -101,12 +102,14 @@ TILES_ARRAY
 """indiquer la map sous forme matricielle en utilisant
 les symboles"""
 # exemple :
-20000
-11111
-20000
+012
+010
+010
+010
+010
 END  # terminer par END
 
-END_OF_FILE  # termine le fichier
+END_OF_FILE  # termine le fichier .map
 ```
 
 Actuellement, voici les conventions de la rose des vents :
@@ -117,3 +120,7 @@ Actuellement, voici les conventions de la rose des vents :
 Voici ce que donne l'exemple ci-dessus (on peut y avoir la correspondance des directions entre `TILES_ARRAY` et la vue isométrique).
 
 ![](img/docmap.png)
+
+### Isometric depth sorting (IDS)
+
+ça arrive !
