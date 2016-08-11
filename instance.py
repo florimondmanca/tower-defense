@@ -57,8 +57,7 @@ class Instance:
 			self.clock.tick(cst.FPS)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
-					pygame.quit()
-					return
+					return "PYGAME_QUIT"
 			self.update()
 			self.display()
 			pygame.display.flip()

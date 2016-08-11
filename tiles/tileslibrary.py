@@ -1,7 +1,7 @@
 import os
 from collections import namedtuple
 import constants as cst
-from . import utils
+import guiutils
 
 
 """
@@ -20,7 +20,7 @@ for cat in cst.TILE_CATEGORIES:
 		for f in files:
 			if f.endswith(".png"):
 				tile_type = f.replace(".png", "")
-				image, rect = utils.load_image(os.path.join(cst.IMG_DIR, *["tiles", cat, f]))
+				image, rect = guiutils.load_image(os.path.join(cst.IMG_DIR, *["tiles", cat, f]))
 				getattr(tlib, cat+"_tiles")[tile_type] = [image, rect]
 	print("OK")
 

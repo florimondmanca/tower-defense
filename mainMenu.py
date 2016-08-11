@@ -108,7 +108,9 @@ def run_game():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if play_button.hover:
                     game = Instance()
-                    game.run()
+                    if game.run() == "PYGAME_QUIT":
+                        pygame.quit()
+                        return
                 elif instructions_button.hover:
                     instructions(screen, clock)
                 elif options_button.hover:

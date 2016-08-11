@@ -1,6 +1,7 @@
 import pygame
 import constants as cst
-from . import utils
+from . import isoutils
+import guiutils
 
 class IsoSprite(pygame.sprite.Sprite):
 	"""
@@ -12,7 +13,7 @@ class IsoSprite(pygame.sprite.Sprite):
 
 	def __init__(self, path_to_image=cst.NONE_TILE_PATH, pos=None):
 		super(IsoSprite, self).__init__()
-		self.image, self.rect = utils.load_image(path_to_image)
+		self.image, self.rect = guiutils.load_image(path_to_image)
 		if pos is None:
 			self._pos = [0, 0]  # in pixels on cartesian map
 		else:
@@ -40,10 +41,10 @@ class IsoSprite(pygame.sprite.Sprite):
 
 	def update_positions(self, pos=False, iso_pos=False):
 		if pos:  # self.pos just changed
-			self._iso_pos = utils.cart_to_iso(self._pos)
+			self._iso_pos = isoutils.cart_to_iso(self._pos)
 			self.rect.center = self._iso_pos
 		elif iso_pos:  # self.iso_pos just changed
-			self._pos = utils.iso_to_cart(self._iso_pos)
+			self._pos = isoutils.iso_to_cart(self._iso_pos)
 			self.rect.center = self._iso_pos
 
 	def display(self, screen):

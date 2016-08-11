@@ -1,8 +1,7 @@
 import os
 import constants as cst
-from . import utils
 from .tileslibrary import tlib
-from .isosprite import IsoSprite
+from isometric.isosprite import IsoSprite
 
 class Tile(IsoSprite):
 	"""
