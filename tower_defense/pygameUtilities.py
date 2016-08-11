@@ -8,7 +8,7 @@ from os import getcwd
 p = getcwd()
 
 from copy import copy
-import constants as CST
+import constants as cst
 
 def load_image(path_to_image):
     """
@@ -31,14 +31,14 @@ class Message(pygame.sprite.Sprite):
 	:param font=textFont: font of the message.
 	:param color: color of the message.
 	'''
-	def __init__(self, msg, center, font=CST.textFont, color=CST.WHITE):
+	def __init__(self, msg, center, font=cst.textFont, color=cst.WHITE):
 		self.text = msg
 		self.font = font
 		self.image = font.render(msg, True, color)
 		self.rect = self.image.get_rect()
 		self.rect.center = center
 
-	def changeMessage(self, newMsg, font=CST.textFont, color=CST.WHITE):
+	def changeMessage(self, newMsg, font=cst.textFont, color=cst.WHITE):
 		self.text = newMsg
 		self.image = font.render(newMsg, True, color)
 		self.rect = self.image.get_rect(center=self.rect.center)
@@ -78,7 +78,7 @@ class Button:
 	:param font=textFont: font of the button.
 	:param color=white: color of the button.
 	"""
-	def __init__(self, text, center, font=CST.textFont, color=CST.WHITE):
+	def __init__(self, text, center, font=cst.textFont, color=cst.WHITE):
 		self.text = text
 		self.font = font
 		self.rect = font.render(text, True, color).get_rect()
@@ -114,7 +114,7 @@ class Button:
 			b = max(b-70, 0)
 		return (r, g, b)
 
-	def changeText(self, newText, color=CST.WHITE):
+	def changeText(self, newText, color=cst.WHITE):
 		self.text = newText
 		self.image = self.font.render(newText, True, color)
 		self.rect = self.image.get_rect(center=self.rect.center)
@@ -122,7 +122,7 @@ class Button:
 class GraphicButton:
 	'''Bouton de selection d'une tourelle dans la GUI '''
 
-	def __init__(self,topleft, data_number, font=CST.textFont2):
+	def __init__(self,topleft, data_number, font=cst.textFont2):
 
 		self.data = turret_dict[data_number]  #La tourelle associée au bouton
 		self.preview = self.data.preview  # Image réelle de la tourelle

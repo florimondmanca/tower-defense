@@ -4,7 +4,7 @@
 
 import pygame
 
-import constants as CST
+import constants as cst
 from pygameUtilities import load_image, Message, Button, GraphicButton, Cursor, Score
 from tiles.map import *
 
@@ -17,10 +17,10 @@ class Instance:
 	def __init__(self, map_name):
 		# init pygame, screen and clock
 		pygame.init()
-		self.screen = CST.SCREEN
+		self.screen = cst.SCREEN
 		self.clock = pygame.time.Clock()
-		self.screen_width = CST.SCREEN_WIDTH
-		self.screen_height = CST.SCREEN_HEIGHT
+		self.screen_width = cst.SCREEN_WIDTH
+		self.screen_height = cst.SCREEN_HEIGHT
 		# init the map
 		self.map = Map.import_map(map_name)
 		#self.map = Map.create_plain("grass", 10, 10); self.init_map()

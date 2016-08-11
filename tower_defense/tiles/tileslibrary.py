@@ -1,6 +1,6 @@
 import os
 from collections import namedtuple
-import constants as CST
+import constants as cst
 from pygameUtilities import load_image
 from .tilepatch import TilePatch
 
@@ -10,14 +10,14 @@ The tiles library contains all Tile Patches available from static/img/tiles.
 Usage:
 from .tileslibrary import tlib
 """
-TLib = namedtuple("tlib", [cat+"_tiles" for cat in CST.TILE_CATEGORIES])
+TLib = namedtuple("tlib", [cat+"_tiles" for cat in cst.TILE_CATEGORIES])
 TLib.__new__.__defaults__ = (dict(),) * len(TLib._fields)
 tlib = TLib()
 print("\n-- LOADING : Tiles library --")
-for cat in CST.TILE_CATEGORIES:
+for cat in cst.TILE_CATEGORIES:
 	print("Loading {} tiles...".format(cat))
 	# walk through the each category folder to add files
-	for root, dirs, files in os.walk(os.path.join(CST.IMG_DIR, *["tiles", cat])):
+	for root, dirs, files in os.walk(os.path.join(cst.IMG_DIR, *["tiles", cat])):
 		for f in files:
 			if f.endswith(".png"):
 				tile_type = f.replace(".png", "")

@@ -11,7 +11,7 @@ if sys.platform == "win32": #si sous windows,
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 
-import constants as CST
+import constants as cst
 from pygameUtilities import Message, Button, Cursor, Score
 from instance import Instance
 
@@ -35,7 +35,7 @@ def options(screen,clock):
         (hw, 4*caseSize-12), font=creditFont)
 
     while True:
-        clock.tick(CST.FPS)
+        clock.tick(cst.FPS)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if menuButton.lit:
@@ -47,7 +47,7 @@ def options(screen,clock):
                     elif musicButton.text == "OFF":
                         musicButton.changeText("ON")
                         pygame.mixer.unpause()
-        screen.fill(CST.TURQUOISE)
+        screen.fill(cst.TURQUOISE)
         optionsMessage.display(screen)
         menuButton.update(screen)
         musicMessage.display(screen)
@@ -70,7 +70,7 @@ def instructions(screen, clock):
         (hw, 18+int(1.5*caseSize)), font=creditFont)
     menuButton = Button("Back to menu", (hw, int(3.5*caseSize)))
     while True:
-        clock.tick(CST.FPS)
+        clock.tick(cst.FPS)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if menuButton.lit:
@@ -89,7 +89,7 @@ def run_game():
     """
     pygame.mixer.init()
     musicChannel = pygame.mixer.Channel(0)
-    musicSound = pygame.mixer.Sound(os.path.join(CST.SONG_DIR,"TicTacToe_theme.wav"))
+    musicSound = pygame.mixer.Sound(os.path.join(cst.SONG_DIR,"TicTacToe_theme.wav"))
     pygame.display.set_caption("BubbleRush")
     clock = pygame.time.Clock()
     hw = screenSize[0]//2
