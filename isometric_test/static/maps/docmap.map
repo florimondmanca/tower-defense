@@ -1,0 +1,20 @@
+WIDTH
+3
+HEIGHT
+5
+
+TILE_TYPES
+0 terrain grass
+1 terrain roadNorth
+2 terrain dirt
+END
+
+TILES_ARRAY
+012
+010
+010
+010
+010
+END
+
+END_OF_FILE
