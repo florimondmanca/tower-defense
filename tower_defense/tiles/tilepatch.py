@@ -1,6 +1,6 @@
 import os
 import constants as cst
-from . import utils
+from pygameUtilities import load_image
 
 class TilePatch:
 	"""
@@ -10,7 +10,7 @@ class TilePatch:
 	def __init__(self, category, tile_type):
 		self.category = category
 		self.tile_type = tile_type
-		self.image, self.rect = utils.load_image(os.path.join(cst.IMG_DIR, *["tiles", category, tile_type+".png"]))
+		self.image, self.rect = load_image(os.path.join(cst.IMG_DIR, *["tiles", category, tile_type+".png"]))
 
 	def __str__(self):
 		return "TilePatch: {}".format(self.tile_type)

@@ -27,6 +27,7 @@ MAP_WIDTH, MAP_HEIGHT = 20, 20
 MAP_SIZE = (MAP_WIDTH, MAP_HEIGHT)
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # set a screen now (needed for the TilesLibrary)
 
+CASE_SIZE = 120
 
 
 # Colors

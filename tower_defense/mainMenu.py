@@ -24,15 +24,15 @@ def options(screen,clock):
     Runs the loop for the OPTIONS screen.
     """
 
-    hw = screenSize[0]//2
-    optionsMessage = Message("Options", (hw, caseSize), font=titleFont)
-    musicMessage = Message("Music:  ", (hw, int(1.5*caseSize)))
-    musicButton = Button("ON", (musicMessage.rect.right, int(1.5*caseSize)))
-    menuButton = Button("Back to menu", (hw, int(3.5*caseSize)))
+    hw = cst.SCREEN_WIDTH//2
+    optionsMessage = Message("Options", (hw, cst.CASE_SIZE), font=cst.titleFont)
+    musicMessage = Message("Music:  ", (hw, int(1.5*cst.CASE_SIZE)))
+    musicButton = Button("ON", (musicMessage.rect.right, int(1.5*cst.CASE_SIZE)))
+    menuButton = Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
     creditsMessage1 = Message( "Game by Guillaume Coiffier and Florimond Manca",
-        (hw, 4*caseSize-24-2), font=creditFont)
+        (hw, 4*cst.CASE_SIZE-24-2), font=creditFont)
     creditsMessage2 = Message( "Music by Florimond Manca",
-        (hw, 4*caseSize-12), font=creditFont)
+        (hw, 4*cst.CASE_SIZE-12), font=creditFont)
 
     while True:
         clock.tick(cst.FPS)
@@ -61,14 +61,14 @@ def instructions(screen, clock):
     """
     Runs the loop for the INSTRUCTIONS screen.
     """
-    hw = screenSize[0]//2
-    instructionsMessage = Message("Instructions", (hw, caseSize),
-        font=titleFont)
+    hw = cst.SCREEN_WIDTH//2
+    instructionsMessage = Message("Instructions", (hw, cst.CASE_SIZE),
+        font=cst.titleFont)
     instructions1 = Message("this is a message",
-        (hw, int(1.5*caseSize)), font=creditFont)
+        (hw, int(1.5*cst.CASE_SIZE)), font=creditFont)
     instructions2 = Message("this is an other message",
-        (hw, 18+int(1.5*caseSize)), font=creditFont)
-    menuButton = Button("Back to menu", (hw, int(3.5*caseSize)))
+        (hw, 18+int(1.5*cst.CASE_SIZE)), font=creditFont)
+    menuButton = Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
     while True:
         clock.tick(cst.FPS)
         for event in pygame.event.get():
@@ -92,18 +92,18 @@ def run_game():
     musicSound = pygame.mixer.Sound(os.path.join(cst.SONG_DIR,"TicTacToe_theme.wav"))
     pygame.display.set_caption("BubbleRush")
     clock = pygame.time.Clock()
-    hw = screenSize[0]//2
-    title = Message("BubbleRush", (hw, caseSize//2),
-                    font=titleFont)
-    playButton = Button("Play", (hw, int(1.5*caseSize)))
-    instructionsButton = Button("Instructions", (hw, 2*caseSize))
-    optionsButton = Button("Options", (hw, int(2.5*caseSize)))
-    quitButton = Button("Quit", (hw, int(3.5*caseSize)))
+    hw = cst.SCREEN_WIDTH//2
+    title = Message("BubbleRush", (hw, cst.CASE_SIZE//2),
+                    font=cst.titleFont)
+    playButton = Button("Play", (hw, int(1.5*cst.CASE_SIZE)))
+    instructionsButton = Button("Instructions", (hw, 2*cst.CASE_SIZE))
+    optionsButton = Button("Options", (hw, int(2.5*cst.CASE_SIZE)))
+    quitButton = Button("Quit", (hw, int(3.5*cst.CASE_SIZE)))
 
     musicChannel.play(musicSound, loops=-1, fade_ms=2000)
 
     while True:
-        clock.tick(fps)
+        clock.tick(cst.FPS)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if playButton.lit:
@@ -119,7 +119,7 @@ def run_game():
                     pygame.quit()
                     return
 
-        screen.fill(turquoise)
+        screen.fill(cst.TURQUOISE)
         title.display(screen)
         playButton.update(screen)
         instructionsButton.update(screen)

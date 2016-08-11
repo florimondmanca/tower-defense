@@ -1,7 +1,6 @@
 import os
 from collections import namedtuple
 import constants as cst
-from pygameUtilities import load_image
 from .tilepatch import TilePatch
 
 
