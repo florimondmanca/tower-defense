@@ -6,10 +6,18 @@ import pygame
 
 import constants as cst
 from guiutils import load_image, Message, Button, GraphicButton, Cursor, Score
-from tiles.map import *
+from tiles.map import Map
 from entities import mob
+from isometric import isoutils
+import guiutils
 
 # ------ Classe Principale ------
+
+# key_to_function : simple mapping from keys to Instance's functions
+key_to_function = {
+	pygame.K_LEFT: lambda self: self.rotate_all_left(),
+	pygame.K_RIGHT: lambda self: self.rotate_all_right(),
+}
 
 class Instance:
 	"""
@@ -30,6 +38,26 @@ class Instance:
 	def update(self):
 		self.mobs.update()
 
+	def rotate_all_left(self):
+		"""
+		Rotates the map, the mobs, etc 90° clockwise around the screen's center
+		"""
+		map_center_cart = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
+		for tile in self.map.tiles.values():
+			tile.rotate_left(map_center_cart)
+		for mob in self.mobs:
+			mob.rotate_left(map_center_cart)
+
+	def rotate_all_right(self):
+		"""
+		Rotates the map, the mobs, etc 90° anti-clockwise around the screen's center
+		"""
+		map_center_cart = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
+		for tile in self.map.tiles.values():
+			tile.rotate_right(map_center_cart)
+		for mob in self.mobs:
+			mob.rotate_right(map_center_cart)
+
 	def display(self):
 		self.screen.fill(pygame.Color("white"))
 		for tile in self.map:
@@ -43,19 +71,19 @@ class Instance:
 		for mob in self.mobs:
 			mob.display(self.screen)
 
-
-
 	def run(self):
 		while True:
 			self.clock.tick(cst.FPS)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					return "PYGAME_QUIT"
+				elif event.type == pygame.KEYDOWN:
+					if event.key in key_to_function:
+						key_to_function[event.key](self)
+
 			self.update()
 			self.display()
 			pygame.display.flip()
-
-
 
 	def pause(self):
 		'''Runs the pause menu '''

@@ -18,12 +18,13 @@ class IsoSprite(pygame.sprite.Sprite):
 
 	def __init__(self, path_to_image=cst.NONE_TILE_PATH, pos=None):
 		super(IsoSprite, self).__init__()
-		self.image, self.rect = guiutils.load_image(path_to_image)
+		self.image, self.iso_rect = guiutils.load_image(path_to_image)
 		if pos is None:
 			self._pos = [0, 0]  # in pixels on cartesian map
 		else:
 			self._pos = pos
 		self._iso_pos = None  # in pixels on isometric (screen) map
+		self.rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.iso_rect.size))  # rect on cartesian map, used for collisions
 		self._update_positions(pos=True)
 
 	def get_pos(self):
@@ -48,11 +49,25 @@ class IsoSprite(pygame.sprite.Sprite):
 		""" Keeps pos, iso_pos and rect up-to-date """
 		if pos:  # self.pos just changed
 			self._iso_pos = isoutils.cart_to_iso(self._pos)
-			self.rect.center = self._iso_pos
+			self.rect.center = self._pos
+			self.iso_rect.center = self._iso_pos
 		elif iso_pos:  # self.iso_pos just changed
 			self._pos = isoutils.iso_to_cart(self._iso_pos)
-			self.rect.center = self._iso_pos
+			self.rect.center = self._pos
+			self.iso_rect.center = self._iso_pos
 
 	def display(self, screen):
 		"""Displays the sprite on the screen in isometric perspective"""
-		screen.blit(self.image, self.rect)
+		screen.blit(self.image, self.iso_rect)
+
+	def rotate_left(self, map_center):
+		"""
+		Rotates the sprite by 90° clockwise around the map center.
+		"""
+		self.pos = guiutils.rotate_left(self.pos, map_center)
+
+	def rotate_right(self, map_center):
+		"""
+		Rotates the sprite by 90° anti-clockwise around the map center.
+		"""
+		self.pos = guiutils.rotate_right(self.pos, map_center)
