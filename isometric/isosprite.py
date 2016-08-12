@@ -56,3 +56,9 @@ class IsoSprite(pygame.sprite.Sprite):
 	def display(self, screen):
 		"""Displays the sprite on the screen in isometric perspective"""
 		screen.blit(self.image, self.rect)
+
+	def rotate_left(self, map_center):
+		"""
+		Rotates the sprite by 90° clockwise around the map center.
+		"""
+		self.pos = guiutils.rotate_left(self.pos, map_center)

@@ -95,7 +95,6 @@ class Map:
 		print("Map import is successful !")
 		return Map(width=width, height=height, tiles=tiles)
 
-
 	def __getitem__(self, pos):
 		""" Allows direct access to the tiles, e.g. some_map[x, y] instead of some_map.tiles[x][y]. If y is not passed (some_map[x]), returns the complete row some_map.tiles[x]. """
 		if isinstance(pos, tuple):
@@ -105,19 +104,16 @@ class Map:
 			x = pos
 			return self.tiles[x, 0]
 
-	def __setitem__(self, pos, category, tile_type):
-		""" Allows direct replacement of a tile using its tile_type, i.e. a string value.
-		If pos is a (x, y) tuple, changes the tile at (x, y).
-		If only x is passed, changes the whole row to the given tile. """
-		if isinstance(pos, tuple):
-			self.tiles[pos].change(category=category, tile_type=tile_type)
-		else:
-			x = pos
-			for y in range(self.height):
-				self.tiles[x, y].change(category=category, tile_type=tile_type)
+	def __setitem__(self, pos, tile):
+		""" Allows direct replacement of a tile, e.g. some_map[x, y] = new_tile """
+		self.tiles[pos] = tile
 
 	def __iter__(self):
 		""" Iterates over the map tiles, in descending depth (y) order. """
-		for x in range(self.width):
-			for y in range(self.height):
-				yield self.tiles[x, y]
+		tiles_list = [tile for tile in self.tiles.values()]
+		tiles_list.sort(key=lambda tile: tile.pos[0] + tile.pos[1])
+		for tile in tiles_list:
+			yield tile
+
+	def copy(self):
+		return Map(width=self.width, height=self.height, tiles=self.tiles)
