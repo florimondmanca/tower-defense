@@ -13,8 +13,10 @@ import guiutils
 
 # ------ Classe Principale ------
 
+# key_to_function : simple mapping from keys to Instance's functions
 key_to_function = {
 	pygame.K_LEFT: lambda self: self.rotate_all_left(),
+	pygame.K_RIGHT: lambda self: self.rotate_all_right(),
 }
 
 class Instance:
@@ -41,11 +43,20 @@ class Instance:
 		Rotates the map, the mobs, etc 90° clockwise around the screen's center
 		"""
 		map_center_cart = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
-		map_center_tile = isoutils.cart_to_tile(map_center_cart)
 		for tile in self.map.tiles.values():
 			tile.rotate_left(map_center_cart)
 		for mob in self.mobs:
 			mob.rotate_left(map_center_cart)
+
+	def rotate_all_right(self):
+		"""
+		Rotates the map, the mobs, etc 90° anti-clockwise around the screen's center
+		"""
+		map_center_cart = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
+		for tile in self.map.tiles.values():
+			tile.rotate_right(map_center_cart)
+		for mob in self.mobs:
+			mob.rotate_right(map_center_cart)
 
 	def display(self):
 		self.screen.fill(pygame.Color("white"))

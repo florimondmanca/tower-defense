@@ -88,9 +88,6 @@ class Map:
 			for y in range(height):
 				cat, tile_type = tile_types[tiles_symb[x][y]]
 				tiles[x, y] = Tile(pos=(x*cst.TILE_SIZE, y*cst.TILE_SIZE), category=cat, tile_type=tile_type)
-		# correct a weird bug
-		for tile in tiles.values():
-			tile.rect.center = tile.iso_pos
 		# we're done !
 		print("Map import is successful !")
 		return Map(width=width, height=height, tiles=tiles)

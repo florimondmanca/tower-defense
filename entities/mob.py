@@ -27,10 +27,14 @@ class ChaserMob(IsoSprite):
 		self.anim_speed = 5  # sprite anims every anim_speed frames
 		self.anim_counter = 0  # increments every frame
 		self.size = 32  # pixels
-		newrect = pygame.Rect(0, 0, self.size, self.size)
-		newrect.center = self.rect.center
-		self.rect = newrect
-		print(self.rect, self.target.rect)
+		# v force rect to be of size self.size, not spritesheet's size !
+		new_iso_rect = pygame.Rect((0, 0), (self.size, self.size))
+		new_iso_rect.center = self.iso_pos
+		self.iso_rect = new_iso_rect
+		new_rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.size, self.size))
+		new_rect.center = self.pos
+		self.rect = new_rect
+		# ^
 		self.anim_image = None
 		self.update_anim_image()
 
@@ -53,7 +57,7 @@ class ChaserMob(IsoSprite):
 			n = math.sqrt(dir_x*dir_x + dir_y*dir_y)
 			dx = self.speed*dir_x/n
 			dy = self.speed*dir_y/n
-			if not self.rect.move(*isoutils.cart_to_iso(dx, dy)).colliderect(self.target.rect):
+			if not self.rect.move(dx, dy).colliderect(self.target.rect):
 				self.pos = (self.pos[0] + dx, self.pos[1] + dy)
 				# define the new orientation
 				angle = math.atan2(-dy, dx)
@@ -67,5 +71,8 @@ class ChaserMob(IsoSprite):
 					self.state = 0
 
 	def display(self, screen):
-		screen.blit(self.anim_image, self.rect)
-		pygame.draw.rect(screen, pygame.Color("red"), self.target.rect, 2)
+		screen.blit(self.anim_image, self.iso_rect)
+		pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
+		pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
+		pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
+		pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)

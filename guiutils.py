@@ -26,9 +26,15 @@ def rotate_left(pos, center):
 	"""
 	Rotates a given position around a given center by 90° clockwise
 	"""
+	return [(pos[1] - center[1]) + center[0],
+			-(pos[0] - center[0]) + center[1]]
+
+def rotate_right(pos, center):
+	"""
+	Rotates a given position around a given center by 90° anti-clockwise
+	"""
 	return [-(pos[1] - center[1]) + center[0],
 			(pos[0] - center[0]) + center[1]]
-
 
 class Message(pygame.sprite.Sprite):
 	'''
