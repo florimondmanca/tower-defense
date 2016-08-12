@@ -1,29 +1,22 @@
 '''
 Entities class.
-Generic classes representing every entities (mobs and turrets) of the game
+Generic classes representing every entities (mobs and turrets) of the game.
+Classes Turret and Mob inherits from class IsoSprite (juste like the Tile class)
 '''
 
 # ------ Importations ------
 
 import pygame
 import math
+from isometric import IsoSprite, isoutils
 
 # ------ Entities ------
 
-class Turret:
+class Turret(IsoSprite):
     '''Classe de base des tourelles posables par le joueur '''
 
-    def __init__(self,img,can, size, price = 50):
-        self.base,self.base_rect = load_image(img)
-        self.cannon,self.cannon_rect = load_image(can)
-        self.size = size
-        self.price = price
-        self.pos = (-1,-1)
-
-    def init_pos(self,pos):
-        self.base_rect.move_ip(pos)
-        self.cannon_rect.move_ip(pos)
-        self.pos = pos
+    def __init__(self):
+        pass
         
     def update(self,bliton= None):
         if bliton == None :
@@ -32,12 +25,10 @@ class Turret:
         #bliton.blit(self.cannon, self.cannon_rect)
 
 
-class Mob:
+class Mob(IsoSprite):
     ''' Classe de base des monstres traversant le niveau '''
 
     def __init__(self, pos, img, spd = 1):
-        ''' __init__(self, pos, img, spd): Initialise un mob'''
-        pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(img)
         self.speed = spd
         self.rect.center = pos
@@ -45,29 +36,6 @@ class Mob:
         self.angle = math.radians(0)   # angle initial
         self.angle_cons = 0            # angle de consigne initial
         self.pas_rot = math.radians(15)
-
-     
-    def pivot(self):
-        ''' pivot(self): Gère la rotation. Incrémente ou décrémente son angle suivant la valeur de l'angle de consigne angle_cons, obtenu à partir des touches directionnelles du clavier. '''
-        
-        alpha , beta = round( math.degrees( self.angle ) ) , self.angle_cons
-        delta = beta - alpha
-        if delta > 180:       # gère les cas particuliers
-            delta = delta - 360
-        if delta < -180:
-            delta = delta + 360
-        if delta > 5:       # on se laisse une marge pour éviter les erreurs numériques
-            self.angle += self.pas_rot
-        elif delta < -5:
-            self.angle -= self.pas_rot
-
-    def rotate(self):
-        ''' rotate(self): pivote le sprite du corps d'un angle self.angle '''
-        
-        centre_rect = self.rect.center
-        angle = math.degrees( self.angle )
-        self.image = pygame.transform.rotate( self.image , angle )
-        self.rect = self.image.get_rect( center=centre_rect )
         
     def update(self):
         ''' update(self): met à jour la position du mob'''
@@ -81,19 +49,11 @@ class Mob:
         screen = pygame.display.get_surface()
         screen.blit(self.image , self.rect)
 
-    # fonctions de déplacement
-    def moveright(self):
-        self.movepos[0] = self.speed
-    def moveleft(self):
-        self.movepos[0] = -self.speed
-    def moveup(self):
-        self.movepos[1] = -self.speed
-    def movedown(self):
-        self.movepos[1] = self.speed
-    def stophorizontal(self):
-        self.movepos[0] = 0
-    def stopvertical(self):
-        self.movepos[1] = 0
-    def stop(self):
-        self.movepos = [0,0]
+    def display(self, screen = pygame.display.get_surface()):
+        screen.blit(self.anim_image, self.iso_rect)
+        pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
+        pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
+        pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
+        pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
+
 

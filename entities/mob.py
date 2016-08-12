@@ -8,11 +8,11 @@ import os
 import pygame
 import math
 import constants as cst
-from isometric import IsoSprite, isoutils
 import math
+from . import entity
 
 
-class ChaserMob(IsoSprite):
+class ChaserMob(entity.Mob):
 	"""
 	A mob animated through a spritesheet that chases a target IsoSprite object.
 	If target is None, the Chaser stands in place.
@@ -70,9 +70,3 @@ class ChaserMob(IsoSprite):
 				else:
 					self.state = 0
 
-	def display(self, screen):
-		screen.blit(self.anim_image, self.iso_rect)
-		pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
-		pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
-		pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
-		pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
