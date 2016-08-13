@@ -56,7 +56,7 @@ class IsoSprite(pygame.sprite.Sprite):
 			self.rect.center = self._pos
 			self.iso_rect.center = self._iso_pos
 
-	def display(self, screen):
+	def display(self, screen = pygame.display.get_surface()):
 		"""Displays the sprite on the screen in isometric perspective"""
 		screen.blit(self.image, self.iso_rect)
 

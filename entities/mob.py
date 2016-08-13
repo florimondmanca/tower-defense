@@ -21,34 +21,12 @@ class ChaserMob(entity.Mob):
 	def __init__(self, pos=None, target=None):
 		super(ChaserMob, self).__init__(path_to_image=os.path.join(cst.IMG_DIR, *["spritesheets", "chaser.png"]), pos=pos)
 		self.target = target
-		self.speed = 3  # chasing speed
-		self.anim_key = 0  # 0, 1 or 2 (x on spritesheet)
-		self.state = 0  # 0 front, 1 left, 2 right, 3 back (y on spritesheet)
-		self.anim_speed = 5  # sprite anims every anim_speed frames
-		self.anim_counter = 0  # increments every frame
-		self.size = 32  # pixels
-		# v force rect to be of size self.size, not spritesheet's size !
-		new_iso_rect = pygame.Rect((0, 0), (self.size, self.size))
-		new_iso_rect.center = self.iso_pos
-		self.iso_rect = new_iso_rect
-		new_rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.size, self.size))
-		new_rect.center = self.pos
-		self.rect = new_rect
-		# ^
-		self.anim_image = None
-		self.update_anim_image()
 
-	def update_anim_image(self):
-		mask_rect = pygame.Rect(self.anim_key*self.size, self.state*self.size, self.size, self.size)
-		self.anim_image = self.image.subsurface(mask_rect)
 
 	def update(self):
-		# update the animation
-		self.anim_counter += 1
-		if self.anim_counter == self.anim_speed:
-			self.anim_counter = 0
-			self.anim_key = (self.anim_key + 1) % 3
-			self.update_anim_image()
+		# generic Mob update
+		entity.Mob.update(self)
+		
 		# update the position and orientation according to the target
 		if self.target is not None:
 			# get the direction to the target

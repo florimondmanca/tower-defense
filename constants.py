@@ -7,6 +7,9 @@ import os
 
 # ------ Constants ------
 
+# DEBUG VARIABLE
+DEBUG = True
+
 # Filesystem-related constants
 BASE_DIR = os.path.dirname(__file__)
 print(BASE_DIR)

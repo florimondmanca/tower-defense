@@ -36,6 +36,7 @@ def rotate_right(pos, center):
 	return [-(pos[1] - center[1]) + center[0],
 			(pos[0] - center[0]) + center[1]]
 
+
 class Message(pygame.sprite.Sprite):
 	'''
 	A class for manipulating text messages and bring them on screen easily.
@@ -133,6 +134,7 @@ class Button:
 		self.rect = self.image.get_rect(center=self.rect.center)
 
 
+
 class GraphicButton:
 	'''Bouton de selection d'une tourelle dans la GUI '''
 
@@ -183,6 +185,7 @@ class GraphicButton:
 		bliton.blit(text, self.rect)
 		bliton.blit(price, self.price_rect)
 		bliton.blit(self.img, self.rect)
+
 
 class Cursor(pygame.sprite.Sprite):
 	"""
