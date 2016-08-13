@@ -22,7 +22,6 @@ class ChaserMob(entity.Mob):
 		super(ChaserMob, self).__init__(path_to_image=os.path.join(cst.IMG_DIR, *["spritesheets", "chaser.png"]), pos=pos)
 		self.target = target
 
-
 	def update(self):
 		# generic Mob update
 		entity.Mob.update(self)

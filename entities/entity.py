@@ -41,10 +41,10 @@ class Mob(IsoSprite):
         # v force rect to be of size self.size, not spritesheet's size !
         new_iso_rect = pygame.Rect((0, 0), (self.size, self.size))
         new_iso_rect.center = self.iso_pos
-        self.iso_rect = new_iso_rect
+        self.set_iso_rect(new_iso_rect)
         new_rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.size, self.size))
         new_rect.center = self.pos
-        self.rect = new_rect
+        self.set_rect(new_rect)
 
         # ^
         self.anim_image = None
