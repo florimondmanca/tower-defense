@@ -9,18 +9,39 @@ import pygame
 import math
 import constants as cst
 import math
+from queue import PriorityQueue
 from . import entity
 
 
 class ChaserMob(entity.Mob):
 	"""
-	A mob animated through a spritesheet that chases a target IsoSprite object.
+	A mob that chases a target IsoSprite object.
 	If target is None, the Chaser stands in place.
 	ChaserMob(pos=(0, 0), target=None) -> ChaserMob
 	"""
 	def __init__(self, pos=None, target=None):
 		super(ChaserMob, self).__init__(path_to_image=os.path.join(cst.IMG_DIR, *["spritesheets", "chaser.png"]), pos=pos)
 		self.target = target
+
+	def find_path(self,obstacles):
+		'''
+		find_path(self,obstacles) -> path
+			return a list of tiles to walk on in order to get to the target avoiding obstacles. The path is the shortest possible path
+			if no path is available, returns None.
+		'''
+
+		n,m = cst.TERRAIN_WIDTH, cst.TERRAIN_HEIGHT
+
+		passage = [[None for j in range(m)] for i in range(n)]
+		distance = [[float('inf') for j in range(m)] for i in range(n)]
+		seen = [[False for j in range(m)] for i in range(n)]
+		pqueue = PriorityQueue()
+
+		seen[self.pos] = True
+		distance[self.pos] = 0
+
+		while not seen[self.target.pos] :
+			break
 
 	def update(self):
 		# generic Mob update
@@ -47,3 +68,22 @@ class ChaserMob(entity.Mob):
 				else:
 					self.state = 0
 
+class FlyingMob(entity.Mob):
+	"""
+	A mob that chases a target IsoSprite object.
+	If target is None, the Chaser stands in place.
+	ChaserMob(pos=(0, 0), target=None) -> ChaserMob
+	"""
+	def __init__(self, pos=None):
+			super(ChaserMob, self).__init__(path_to_image=os.path.join(cst.IMG_DIR, *["spritesheets", "chaser.png"]), pos=pos)
+
+
+class AvoiderMob(entity.Mob):
+	"""
+	A mob that avoids beeing hit by the turrets
+	If target is None, the Chaser stands in place.
+	ChaserMob(pos=(0, 0), target=None) -> ChaserMob
+	"""
+	def __init__(self, pos=None, target=None):
+			super(ChaserMob, self).__init__(path_to_image=os.path.join(cst.IMG_DIR, *["spritesheets", "chaser.png"]), pos=pos)
+			self.target = target
