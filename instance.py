@@ -7,7 +7,7 @@ import pygame
 import constants as cst
 from guiutils import load_image, Message, Button, GraphicButton, Cursor, Score
 from tiles.map import Map
-from entities import mob
+from entities import moblist,turretlist,mainTurret
 from isometric import isoutils
 import guiutils
 
@@ -35,9 +35,11 @@ class Instance:
 		self.map = Map.import_map(map_name)
 		self.matrix = [[None for j in range(2*cst.MAP_WIDTH)] for i in range(2*cst.MAP_HEIGHT)]
 
+		self.player = mainTurret.MainTurret()
+
 		# init the mobs
 		self.mobs = pygame.sprite.Group()
-		self.mobs.add(mob.ChaserMob(pos=(300, 400), target=self.map.tiles[1, 0]))
+		self.mobs.add(moblist.ChaserMob(pos=(300, 400), target=self.map.tiles[1, 0]))
 		
 
 	def update(self):
@@ -75,7 +77,9 @@ class Instance:
 			deco.display(self.screen)
 		for mob in self.mobs:
 			mob.display(self.screen)
-		# display turret
+		for turret in self.turrets:
+			turret.display(self.screen)
+		
 
 		if cst.DEBUG :
 			# mid-screen lines

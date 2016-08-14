@@ -1,101 +1,36 @@
-# encoding=utf-8
+'''
+Entities class.
+Generic classes representing every entities (mobs and turrets) of the game.
+Classes Turret and Mob inherits from class IsoSprite (juste like the Tile class)
+'''
 
 # ------ Importations ------
 
 import pygame
 import math
-from entity import Turret
+from isometric import IsoSprite, isoutils
+import constants as cst
 
-# ------ Tourelles ------
+# ------ Turret Class ------
 
-'''
-Définir ICI une fonction plussify
-'''
+class Turret(IsoSprite):
+    '''Classe de base des tourelles posables par le joueur '''
 
-class BasicSmall(Turret):
+    def __init__(self, path_to_image, pos):
 
-	def __init__(self):
-		Turret.__init__(self,"turret_base1.png","cannon.png", 1, 50)
-		self.preview = "turret_base1.png"
-		self.mini = "mini.png"
-		self.name = "Basic S"
+        # game settings
+        self.hp = 0
+        self.hit_ground = True
+        self.hit_fly = True
+        self.price = 100
+        
+    def update(self):
+        pass
 
-
-
-class BasicMedium(Turret):
-
-	def __init__(self):
-		Turret.__init__(self,"turret_base2.png","cannon.png", 2, 100)
-		self.preview = "turret_base2.png"
-		self.mini = "mini.png"
-		self.name = "Basic M"		
-
-
-
-class BasicLarge(Turret):
-	
-	def __init__(self):
-		Turret.__init__(self,"turret_base3.png","cannon.png", 3, 150)
-		self.preview = "turret_base3.png"
-		self.mini = "mini.png"
-		self.name = "Basic L"
-
-
-
-class MissileSmall(Turret):
-
-	def __init__(self):
-		Turret.__init__(self,"turret_base1.png","cannon.png", 1, 80)
-		self.preview = "turret_base1.png"
-		self.mini = "mini.png"
-		self.name = "Missile S"
-
-
-
-class MissileMedium(Turret):
-
-	def __init__(self):
-		Turret.__init__(self,"turret_base2.png","cannon.png", 2, 150)
-		self.preview = "turret_base2.png"
-		self.mini = "mini.png"
-		self.name = "Missile M"
-
-
-
-class MissileLarge(Turret):
-
-	def __init__(self):
-		Turret.__init__(self,"turret_base3.png","cannon.png", 3, 200)
-		self.preview = "turret_base3.png"
-		self.mini = "mini.png"
-		self.name = "Missile L"
-
-
-
-class LaserSmall(Turret):
-
-	def __init__(self):
-		Turret.__init__(self,"turret_base1.png","cannon.png", 1, 250)
-		self.preview = "turret_base1.png"
-		self.mini = "mini.png"
-		self.name = "Laser S"
-
-
-
-class LaserMedium(Turret):
-
-	def __init__(self):
-		Turret.__init__(self,"turret_base2.png","cannon.png", 2, 350)
-		self.preview = "turret_base2.png"
-		self.mini = "mini.png"
-		self.name = "Laser M"
-
-
-
-class LaserLarge(Turret):
-
-	def __init__(self):
-		Turret.__init__(self,"turret_base3.png","cannon.png", 3, 500)
-		self.preview = "turret_base3.png"
-		self.mini = "mini.png"
-		self.name = "Laser L"
+    def display(self, screen = pygame.display.get_surface()):
+        super().display(screen)
+        if cst.DEBUG:
+            pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
+            pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
+            pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
+            pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
