@@ -18,8 +18,6 @@ SONG_DIR = os.path.join(BASE_DIR, *["static", "sounds"])
 MAPS_DIR = os.path.join(BASE_DIR, *["static", "maps"])
 FONT_DIR = os.path.join(BASE_DIR, *["static","fonts"])
 MAP_EXT = ".map"
-TILE_CATEGORIES = list(filter(lambda f: not f.startswith("."), os.listdir(os.path.join(IMG_DIR, "tiles"))))
-
 
 # General game constants
 FPS = 30
@@ -27,19 +25,15 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 TILE_PIXEL_SIZE = 32  # pixels
-TILE_SIZE = 2 # 2*2 spots in the game
 
-TERRAIN_WIDTH = 26
-TERRAIN_HEIGHT = 26
-
-TERRAIN_TILE_WIDTH = TERRAIN_WIDTH//TILE_SIZE
-TERRAIN_TILE_HEIGHT = TERRAIN_HEIGHT//TILE_SIZE
+MAP_WIDTH = 13
+MAP_HEIGHT = 13
 
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # set a screen now (needed for the TilesLibrary)
 
-CASE_SIZE = 120
+CASE_SIZE = 120  # base size for buttons, messages, etc.
 
-# Map system-related constants
+# Map-system-related constants
 NONE_TILE = "none"  # the name of the blank tile (must be in terrain folder)
 NONE_TILE_PATH = os.path.join(IMG_DIR, *["tiles", "none", "none.png"])
 

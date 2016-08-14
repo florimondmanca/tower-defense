@@ -68,6 +68,19 @@ class ChaserMob(entity.Mob):
 				else:
 					self.state = 0
 
+	def display(self, screen = pygame.display.get_surface()):
+		'''
+	    display(self, screen = pygame.display.get_surface()) :
+	        displays the Sprite onto the screen.
+	    '''
+		super().display(screen)
+		if cst.DEBUG:
+			pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
+			pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
+			pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
+			pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
+
+
 class FlyingMob(entity.Mob):
 	"""
 	A mob that chases a target IsoSprite object.
