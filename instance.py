@@ -32,6 +32,9 @@ class Instance:
 		self.screen_height = cst.SCREEN_HEIGHT
 		# init the map
 		self.map = Map.import_map(map_name)
+
+		self.matrix = [[None for j in range(cst.TERRAIN_WIDTH)] for i in range(cst.TERRAIN_HEIGHT)]
+
 		self.mobs = pygame.sprite.Group()
 		self.mobs.add(mob.ChaserMob(pos=(300, 400), target=self.map[1, 0]))
 
@@ -63,9 +66,13 @@ class Instance:
 		for tile in self.map:
 			tile.display(self.screen)
 
-		# mid-screen lines (optional, just for landmark)
-		pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
-		pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
+		for deco in self.map.deco:
+			deco.display(self.screen)
+
+		if cst.DEBUG :
+			# mid-screen lines
+			pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
+			pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
 
 		# display mobs
 		for mob in self.mobs:
