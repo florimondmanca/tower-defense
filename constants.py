@@ -20,7 +20,7 @@ FONT_DIR = os.path.join(BASE_DIR, *["static","fonts"])
 MAP_EXT = ".map"
 
 # General game constants
-FPS = 30
+FPS = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 

@@ -3,7 +3,7 @@
 # ------ Importations ------
 
 import pygame
-
+from time import time
 import constants as cst
 from guiutils import load_image, Message, Button, GraphicButton, Cursor, Score
 from tiles.map import Map
@@ -15,8 +15,8 @@ import guiutils
 
 # key_to_function : simple mapping from keys to Instance's functions
 key_to_function = {
-	pygame.K_LEFT: lambda self: self.rotate_all_left(),
-	pygame.K_RIGHT: lambda self: self.rotate_all_right(),
+	pygame.K_LEFT: lambda self: self.rotate_all("left"),
+	pygame.K_RIGHT: lambda self: self.rotate_all("right"),
 }
 
 class Instance:
@@ -40,35 +40,22 @@ class Instance:
 		
 		# init the mobs
 		self.mobs = pygame.sprite.Group()
-		self.mobs.add(moblist.ChaserMob(pos=(300, 400), target=self.map.tiles[1, 0]))
-		
+		self.mobs.add(moblist.ChaserMob(tile_pos=(9, 12), target=self.map.tiles[1, 0]))
 
 	def update(self):
 		self.mobs.update()
 
-	def rotate_all_left(self):
-		"""
-		Rotates the map, the mobs, etc 90° clockwise around the screen's center
-		"""
-		map_center_cart = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
+	def rotate_all(self, direction):
+		""" Rotates the map by 90 degrees (clockwise if direction is 'left', counter-clockwise if direction is 'right') """
+		func = "rotate_{}".format(direction)
 		for tile in self.map.tiles.values():
-			tile.rotate_left(map_center_cart)
+			getattr(tile, func)()
 		for mob in self.mobs:
-			mob.rotate_left(map_center_cart)
+			getattr(mob, func)()
 		for deco in self.map.deco:
-			deco.rotate_left(map_center_cart)
-
-	def rotate_all_right(self):
-		"""
-		Rotates the map, the mobs, etc 90° anti-clockwise around the screen's center
-		"""
-		map_center_cart = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
-		for tile in self.map.tiles.values():
-			tile.rotate_right(map_center_cart)
-		for mob in self.mobs:
-			mob.rotate_right(map_center_cart)
-		for deco in self.map.deco:
-			deco.rotate_right(map_center_cart)
+			getattr(deco, func)()
+		for turret in self.turrets:
+			getattr(turret, func)()
 
 	def display(self):
 		self.screen.fill(pygame.Color("white"))
@@ -80,8 +67,6 @@ class Instance:
 			mob.display(self.screen)
 		for turret in self.turrets:
 			turret.display(self.screen)
-		
-
 		if cst.DEBUG :
 			# mid-screen lines
 			pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
@@ -96,7 +81,6 @@ class Instance:
 				elif event.type == pygame.KEYDOWN:
 					if event.key in key_to_function:
 						key_to_function[event.key](self)
-
 			self.update()
 			self.display()
 			pygame.display.flip()

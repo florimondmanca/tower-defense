@@ -19,13 +19,13 @@ class ChaserMob(mob.Mob):
 	If target is None, the Chaser stands in place.
 	ChaserMob(pos=(0, 0), target=None) -> ChaserMob
 	"""
-	def __init__(self, pos=None, target=None):
-		super(ChaserMob, self).__init__(path_to_image=os.path.join(cst.IMG_DIR, *["spritesheets", "chaser.png"]), pos=pos)
+	def __init__(self, tile_pos=None, target=None):
+		super(ChaserMob, self).__init__(path_to_image=os.path.join(cst.IMG_DIR, *["spritesheets", "chaser.png"]), tile_pos=tile_pos)
 		self.target = target
 
 	def update(self):
 		# generic Mob update
-		mob.Mob.update(self)
+		super().update()
 		
 		# update the position and orientation according to the target
 		if self.target is not None:

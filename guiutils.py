@@ -9,6 +9,9 @@ p = getcwd()
 
 from copy import copy
 import constants as cst
+from isometric import isoutils
+
+map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
 
 def load_image(path_to_image):
     """
@@ -22,14 +25,14 @@ def load_image(path_to_image):
         image = image.convert_alpha()
     return image, image.get_rect()
 
-def rotate_left(pos, center):
+def rotate_left(pos, center=map_center):
 	"""
 	Rotates a given position around a given center by 90° clockwise
 	"""
 	return [(pos[1] - center[1]) + center[0],
 			-(pos[0] - center[0]) + center[1]]
 
-def rotate_right(pos, center):
+def rotate_right(pos, center=map_center):
 	"""
 	Rotates a given position around a given center by 90° anti-clockwise
 	"""

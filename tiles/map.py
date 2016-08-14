@@ -10,16 +10,18 @@ class Map:
 	map.tiles is a dict mapping each position to a Tile object
 	map.deco is a list of Decoration objects
 	"""
-	def __init__(self, tiles=None, deco = []):
+	def __init__(self, tiles=None, deco=None):
 		if tiles is None:
-			self.tiles = dict(((x, y), Tile(pos=(x*cst.TILE_SIZE + cst.SCREEN_WIDTH//2, y*cst.TILE_SIZE + cst.SCREEN_HEIGHT//2))) for x in range(width) for y in range(height))
+			fix_x = cst.SCREEN_WIDTH//2 / cst.TILE_SIZE
+			fix_y = cst.SCREEN_HEIGHT//2 / cst.TILE_SIZE
+			self.tiles = dict(((x, y), Tile(pos=(x + fix_x, y + fix_y))) for x in range(cst.MAP_WIDTH) for y in range(cst.MAP_HEIGHT))
 		else:
 			self.tiles = tiles
-		self.deco = deco
+		self.deco = deco is None and [] or deco
 
 	@staticmethod
 	def create_plain(category, tile_type):
-		""" Creates a 'width'*'height' map with only one tiletype. """
+		""" Creates a map with only one tile_type. """
 		new_map = Map()
 		for tile in new_map.tiles.values():
 			tile.change(category, tile_type)
@@ -34,7 +36,7 @@ class Map:
 			raise TypeError("Cannot import map with name {}. Map names must end with '{}'.".format(map_name, cst.MAP_EXT))
 
 		# used to check later on that all values are present in map file
-		found = {"DECORATION_TYPES" : False, "TILE_TYPES": False, "TILES_ARRAY": False , "DECORATION_COORDS" : False}
+		found = {"TILE_TYPES": False, "TILES_ARRAY": False , "DECORATION_TYPES" : False, "DECORATION_COORDS" : False}
 
 		# fetch values from the .map file
 		with open(os.path.join(cst.MAPS_DIR, map_name), 'r') as mapfile:
@@ -104,15 +106,15 @@ class Map:
 		for x in range(cst.MAP_WIDTH):
 			for y in range(cst.MAP_WIDTH):
 				cat, tile_type = tile_types[tiles_symb[x][y]]
-				tiles[x, y] = Tile(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE), category=cat, tile_type=tile_type)
+				tiles[x, y] = Tile(tile_pos=(x - cst.MAP_WIDTH//2, y - cst.MAP_WIDTH//2), category=cat, tile_type=tile_type)
 
 		# assign decoration objects to a list
 		deco = []
 		for d in deco_coords :
 			cat, deco_type = deco_types[d[0]]
 			x, y = d[1], d[2]
-			deco.append(Decoration(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE), category=cat, deco_type=deco_type))
-		# sort it
+			deco.append(Decoration(tile_pos=(x - cst.MAP_WIDTH//2, y - cst.MAP_WIDTH//2), category=cat, deco_type=deco_type))
+		# sort it by depth
 		deco.sort(key=lambda d: d.pos[0] + d.pos[1])
 		# we're done !
 		print("Map import is successful !")
@@ -126,4 +128,4 @@ class Map:
 			yield tile
 
 	def copy(self):
-		return Map(tiles=self.tiles, deco = self.deco)
+		return Map(tiles=self.tiles, deco=self.deco)

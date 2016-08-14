@@ -16,8 +16,8 @@ import constants as cst
 class Turret(IsoSprite):
     '''Classe de base des tourelles posables par le joueur '''
 
-    def __init__(self, path_to_image, pos):
-        IsoSprite.__init__(self, path_to_image, pos)
+    def __init__(self, path_to_image, tile_pos):
+        IsoSprite.__init__(self, path_to_image, tile_pos)
         # game settings
         self.hp = 0
         self.hit_ground = True
@@ -27,7 +27,7 @@ class Turret(IsoSprite):
     def update(self):
         pass
 
-    def display(self, screen = pygame.display.get_surface()):
+    def display(self, screen):
         super().display(screen)
         if cst.DEBUG:
             pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)

@@ -17,8 +17,8 @@ from . import misc
 class Mob(IsoSprite):
     ''' Classe de base des monstres traversant le niveau '''
 
-    def __init__(self, path_to_image, pos = None):
-        IsoSprite.__init__(self, path_to_image, pos)
+    def __init__(self, path_to_image, tile_pos=None):
+        IsoSprite.__init__(self, path_to_image, tile_pos)
         self.spritesheet = self.image
         self.anim_key = 0  # 0, 1 or 2 (x on spritesheet)
         self.state = 0  # 0 front, 1 left, 2 right, 3 back (y on spritesheet)
@@ -33,7 +33,6 @@ class Mob(IsoSprite):
         new_rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.size, self.size))
         new_rect.center = self.pos
         self.set_rect(new_rect)
-
         # ^
         self.image = None
         self.update_image()
@@ -43,7 +42,6 @@ class Mob(IsoSprite):
         self.is_flying = False
         self.hp = 0
 
-
     ## ------ Graphical functions ------
 
     def update_image(self):
@@ -51,9 +49,6 @@ class Mob(IsoSprite):
         self.image = self.spritesheet.subsurface(mask_rect)
         
     def update(self):
-        ''' 
-        update(self):
-        '''
         # update the animation
         self.anim_counter += 1
         if self.anim_counter == self.anim_speed:
@@ -61,9 +56,9 @@ class Mob(IsoSprite):
             self.anim_key = (self.anim_key + 1) % 3
             self.update_image()
 
-    def display(self, screen = pygame.display.get_surface()):
+    def display(self, screen):
         '''
-        display(self, screen = pygame.display.get_surface()) :
+        display(self, screen) :
             displays the Sprite onto the screen.
         '''
         super().display(screen)
@@ -110,9 +105,9 @@ class Mob(IsoSprite):
                             distance[vois] = new_distance
                             passage[vois] = case
                 seen[case] = True
-
-        except Empty : return None
-        else :
+        except Empty:
+            return None
+        else:
             # Post-Processing. Extracting path from datas
             shortest_path = []
             pos = target
@@ -121,4 +116,3 @@ class Mob(IsoSprite):
                 pos = passage[pos]
             shortest_path.reverse()  # shortest_path was (goal -> init) and we want (init -> goal)
             return shortest_path
-
