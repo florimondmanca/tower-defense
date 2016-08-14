@@ -105,14 +105,14 @@ class Map:
 		for x in range(cst.MAP_WIDTH):
 			for y in range(cst.MAP_HEIGHT):
 				cat, tile_type = tile_types[tiles_symb[x][y]]
-				tiles[x, y] = Tile(pos=(x*cst.TILE_PIXEL_SIZE, y*cst.TILE_PIXEL_SIZE), category=cat, tile_type=tile_type)
+				tiles[x, y] = Tile(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_HEIGHT//2)*cst.TILE_PIXEL_SIZE), category=cat, tile_type=tile_type)
 
 		# assign decoration objects to a list
 		deco = []
 		for d in deco_coords :
 			cat, deco_type = deco_types[d[0]]
 			x, y = d[1], d[2]
-			deco.append(Decoration(pos=(x*cst.TILE_PIXEL_SIZE, y*cst.TILE_PIXEL_SIZE), category=cat, deco_type=deco_type))
+			deco.append(Decoration(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_HEIGHT//2)*cst.TILE_PIXEL_SIZE), category=cat, deco_type=deco_type))
 		# sort it
 		deco.sort(key=lambda d: d.pos[0] + d.pos[1])
 		# we're done !

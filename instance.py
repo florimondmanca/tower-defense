@@ -38,6 +38,7 @@ class Instance:
 		# init the mobs
 		self.mobs = pygame.sprite.Group()
 		self.mobs.add(mob.ChaserMob(pos=(300, 400), target=self.map.tiles[1, 0]))
+		
 
 	def update(self):
 		self.mobs.update()
