@@ -30,8 +30,12 @@ class Instance:
 		self.clock = pygame.time.Clock()
 		self.screen_width = cst.SCREEN_WIDTH
 		self.screen_height = cst.SCREEN_HEIGHT
+
 		# init the map
 		self.map = Map.import_map(map_name)
+		self.matrix = [[None for j in range(cst.TERRAIN_WIDTH)] for i in range(cst.TERRAIN_HEIGHT)]
+
+		# init the mobs
 		self.mobs = pygame.sprite.Group()
 		self.mobs.add(mob.ChaserMob(pos=(300, 400), target=self.map[1, 0]))
 
@@ -47,6 +51,8 @@ class Instance:
 			tile.rotate_left(map_center_cart)
 		for mob in self.mobs:
 			mob.rotate_left(map_center_cart)
+		for deco in self.map.deco :
+			deco.rotate_left(map_center_cart)
 
 	def rotate_all_right(self):
 		"""
@@ -57,19 +63,27 @@ class Instance:
 			tile.rotate_right(map_center_cart)
 		for mob in self.mobs:
 			mob.rotate_right(map_center_cart)
+		for deco in self.map.deco :
+			deco.rotate_right(map_center_cart)
 
 	def display(self):
 		self.screen.fill(pygame.Color("white"))
 		for tile in self.map:
 			tile.display(self.screen)
 
-		# mid-screen lines (optional, just for landmark)
-		pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
-		pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
+		for deco in self.map.deco:
+			deco.display(self.screen)
+
+		if cst.DEBUG :
+			# mid-screen lines
+			pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
+			pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
 
 		# display mobs
 		for mob in self.mobs:
 			mob.display(self.screen)
+
+		# display turret
 
 	def run(self):
 		while True:
