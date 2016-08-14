@@ -95,11 +95,14 @@ def run_game():
     hw = cst.SCREEN_WIDTH//2
     title = Message("BubbleRush", (hw, cst.CASE_SIZE//2),
                     font=cst.TITLE_FONT)
+    buttons = pygame.sprite.Group()
     play_button = Button("Play", (hw, int(1.5*cst.CASE_SIZE)))
     tuto_button = Button("Tutorial", (hw, int(2*cst.CASE_SIZE)))
     instructions_button = Button("Instructions", (hw, 2.5*cst.CASE_SIZE))
     options_button = Button("Options", (hw, int(3*cst.CASE_SIZE)))
     quit_button = Button("Quit", (hw, int(3.5*cst.CASE_SIZE)))
+    
+    buttons.add([play_button, tuto_button, instructions_button, options_button, quit_button])
 
     music_channel.play(music_sound, loops=-1, fade_ms=2000)
 
@@ -126,8 +129,5 @@ def run_game():
 
         screen.fill(cst.TURQUOISE)
         title.display(screen)
-        play_button.update(screen)
-        instructions_button.update(screen)
-        options_button.update(screen)
-        quit_button.update(screen)
+        buttons.update(screen)
         pygame.display.flip()

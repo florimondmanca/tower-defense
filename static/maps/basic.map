@@ -4,6 +4,7 @@ END
 
 DECORATION_TYPES
 0 tree treeShort
+1 tree treeShort_autumn
 END
 
 TILES_ARRAY
@@ -23,7 +24,10 @@ TILES_ARRAY
 END
 
 DECORATION_COORDS
-0.10.1
+0.10.10
+0.10.11
+1.5.10
+0.6.10
 END
 
 END_OF_FILE

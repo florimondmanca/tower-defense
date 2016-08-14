@@ -8,21 +8,19 @@ class Map:
 	Ascending X : East
 	Ascending Y : South
 	map.tiles is a dict mapping each position to a Tile object
+	map.deco is a list of Decoration objects
 	"""
-	def __init__(self, tiles=None, deco = None):
+	def __init__(self, tiles=None, deco = []):
 		if tiles is None:
 			self.tiles = dict(((x, y), Tile(pos=(x*cst.TILE_SIZE + cst.SCREEN_WIDTH//2, y*cst.TILE_SIZE + cst.SCREEN_HEIGHT//2))) for x in range(width) for y in range(height))
 		else:
 			self.tiles = tiles
-		if deco is None :
-			self.deco = {}
-		else :
-			self.deco = deco
+		self.deco = deco
 
 	@staticmethod
-	def create_plain(category, tile_type, width, height):
+	def create_plain(category, tile_type):
 		""" Creates a 'width'*'height' map with only one tiletype. """
-		new_map = Map(width=width, height=height)
+		new_map = Map()
 		for tile in new_map.tiles.values():
 			tile.change(category, tile_type)
 		return new_map
@@ -113,8 +111,8 @@ class Map:
 		deco = []
 		for d in deco_coords :
 			cat, deco_type = deco_types[d[0]]
-			print(cat,deco_type)
-			deco.append(Decoration(pos=(d[1]*cst.TILE_PIXEL_SIZE//cst.TILE_SIZE, d[2]*cst.TILE_PIXEL_SIZE//cst.TILE_SIZE), category=cat, deco_type=deco_type))
+			x,y = d[1],d[2]
+			deco.append(Decoration(pos=(x*cst.TILE_PIXEL_SIZE//cst.TILE_SIZE, y*cst.TILE_PIXEL_SIZE//cst.TILE_SIZE), category=cat, deco_type=deco_type))
 
 		# we're done !
 		print("Map import is successful !")
@@ -141,4 +139,4 @@ class Map:
 			yield tile
 
 	def copy(self):
-		return Map(width=self.width, height=self.height, tiles=self.tiles)
+		return Map(tiles=self.tiles, deco = self.deco)

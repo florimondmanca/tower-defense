@@ -85,7 +85,7 @@ class Score:
 		self.msg.display(bliton)
 
 
-class Button:
+class Button(pygame.sprite.Sprite):
 	"""
 	A clickable button which underlines itself when mouse hovers it
 	:param text: the actual text to display.
@@ -94,6 +94,7 @@ class Button:
 	:param color=WHITE: color of the button.
 	"""
 	def __init__(self, text, center, font=cst.TEXT_FONT, color=cst.WHITE):
+		pygame.sprite.Sprite.__init__(self)
 		self.text = text
 		self.font = font
 		self.image = font.render(text, True, color) 
