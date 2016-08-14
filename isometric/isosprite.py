@@ -65,23 +65,15 @@ class IsoSprite(pygame.sprite.Sprite):
 
 	def _update_positions(self, new_pos=None, new_iso_pos=None):
 		""" Keeps pos, iso_pos, rect and iso_rect up-to-date """
-		old_pos = self._pos
-		old_iso_pos = self._iso_pos
 		if new_pos is not None:
 			new_iso_pos = isoutils.cart_to_iso(new_pos)
 		elif new_iso_pos is not None:
 			new_pos = isoutils.iso_to_cart(new_iso_pos)
 		else:
 			raise TypeError("Did not give any position to update !")
-		# compute how much positions have moved
-		dpx, dpy = new_pos[0] - old_pos[0], new_pos[1] - old_pos[1]
-		dipx, dipy = new_iso_pos[0] - old_iso_pos[0], new_iso_pos[1] - old_iso_pos[1]
 		# move the rects with the same amount
-		self._rect.move_ip(dpx, dpy)
-		self._iso_rect.move_ip(dipx, dipy)
-		# place positions
-		self._pos = new_pos
-		self._iso_pos = new_iso_pos
+		self._rect.midbottom = self._pos = new_pos
+		self._iso_rect.midbottom = self._iso_pos = new_iso_pos
 
 	def display(self, screen = pygame.display.get_surface()):
 		"""Displays the sprite on the screen in isometric perspective"""
