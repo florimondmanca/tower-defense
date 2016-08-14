@@ -31,6 +31,7 @@ class Mob(IsoSprite):
 
     def __init__(self, path_to_image, pos = None):
         IsoSprite.__init__(self, path_to_image, pos)
+        self.spritesheet = self.image
         self.speed = 3  # chasing speed
         self.anim_key = 0  # 0, 1 or 2 (x on spritesheet)
         self.state = 0  # 0 front, 1 left, 2 right, 3 back (y on spritesheet)
@@ -45,15 +46,13 @@ class Mob(IsoSprite):
         new_rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.size, self.size))
         new_rect.center = self.pos
         self.set_rect(new_rect)
-
         # ^
-        self.anim_image = None
-        self.update_anim_image()
+        self.image = None
+        self.update_image()
 
-
-    def update_anim_image(self):
+    def update_image(self):
         mask_rect = pygame.Rect(self.anim_key*self.size, self.state*self.size, self.size, self.size)
-        self.anim_image = self.image.subsurface(mask_rect)
+        self.image = self.spritesheet.subsurface(mask_rect)
         
     def update(self):
         ''' 
@@ -64,20 +63,4 @@ class Mob(IsoSprite):
         if self.anim_counter == self.anim_speed:
             self.anim_counter = 0
             self.anim_key = (self.anim_key + 1) % 3
-            self.update_anim_image()
-
-
-    def display(self, screen = pygame.display.get_surface()):
-        '''
-        display(self, screen = pygame.display.get_surface()) :
-            displays the Sprite onto the screen.
-        '''
-        screen.blit(self.anim_image, self.iso_rect)
-
-        if cst.DEBUG :
-            pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
-            pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
-            pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
-            pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
-
-
+            self.update_image()

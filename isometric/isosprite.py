@@ -21,23 +21,20 @@ class IsoSprite(pygame.sprite.Sprite):
 		# initialize from Sprite
 		pygame.sprite.Sprite.__init__(self)
 		# initialize position (in cartesian space) and iso-position (in screen space)
-		if pos is None:
-			self._pos = [0, 0]  # in pixels on cartesian map
-		else:
-			self._pos = pos
-		self._iso_pos = None  # in pixels on isometric (screen) map
+		self._pos = (0, 0)
+		self._iso_pos = isoutils.cart_to_iso(self._pos)  # in pixels on isometric (screen) map
 		# get the image, iso_rect and rect
 		self.image, self._iso_rect = guiutils.load_image(path_to_image)
 		self._rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.iso_rect.size))  # rect on cartesian map, used for collisions
-		self._update_positions(new_pos=True)
+		new_pos = pos is None and (0, 0) or pos
+		self._update_positions(new_pos=new_pos)
 
 	# protect the pos attribute to help updating iso_pos, rect and iso_rect
 	def get_pos(self):
 		return self._pos
 
 	def set_pos(self, new_pos):
-		self._pos = new_pos
-		self._update_positions(new_pos=True)
+		self._update_positions(new_pos=new_pos)
 
 	pos = property(get_pos, set_pos)
 
@@ -46,8 +43,7 @@ class IsoSprite(pygame.sprite.Sprite):
 		return self._iso_pos
 
 	def set_iso_pos(self, new_iso_pos):
-		self._iso_pos = new_iso_pos
-		self._update_positions(new_iso_pos=True)
+		self._update_positions(new_iso_pos=new_iso_pos)
 
 	iso_pos = property(get_iso_pos, set_iso_pos)
 
@@ -67,16 +63,25 @@ class IsoSprite(pygame.sprite.Sprite):
 	def set_iso_rect(self, new_iso_rect):
 		self._iso_rect = new_iso_rect
 
-	def _update_positions(self, new_pos=False, new_iso_pos=False):
+	def _update_positions(self, new_pos=None, new_iso_pos=None):
 		""" Keeps pos, iso_pos, rect and iso_rect up-to-date """
-		if new_pos:  # self.pos just changed
-			self._iso_pos = isoutils.cart_to_iso(self._pos)
-			self._rect.center = self._pos
-			self._iso_rect.center = self._iso_pos
-		elif new_iso_pos:  # self.iso_pos just changed
-			self._pos = isoutils.iso_to_cart(self._iso_pos)
-			self._rect.center = self._pos
-			self._iso_rect.center = self._iso_pos
+		old_pos = self._pos
+		old_iso_pos = self._iso_pos
+		if new_pos is not None:
+			new_iso_pos = isoutils.cart_to_iso(new_pos)
+		elif new_iso_pos is not None:
+			new_pos = isoutils.iso_to_cart(new_iso_pos)
+		else:
+			raise TypeError("Did not give any position to update !")
+		# compute how much positions have moved
+		dpx, dpy = new_pos[0] - old_pos[0], new_pos[1] - old_pos[1]
+		dipx, dipy = new_iso_pos[0] - old_iso_pos[0], new_iso_pos[1] - old_iso_pos[1]
+		# move the rects with the same amount
+		self._rect.move_ip(dpx, dpy)
+		self._iso_rect.move_ip(dipx, dipy)
+		# place positions
+		self._pos = new_pos
+		self._iso_pos = new_iso_pos
 
 	def display(self, screen = pygame.display.get_surface()):
 		"""Displays the sprite on the screen in isometric perspective"""
@@ -99,3 +104,4 @@ class IsoSprite(pygame.sprite.Sprite):
 
 	def __repr__(self):
 		return self.__str__()
+	

@@ -76,17 +76,17 @@ class Map:
 					# must transpose columns and rows
 					tiles_symb = list(map(list, zip(*tiles_symb)))
 					# check dimensions are OK with the ones declared
-					assert len(tiles_symb) == cst.TERRAIN_TILE_WIDTH, "Widths do not correspond !"
-					assert len(tiles_symb[0]) == cst.TERRAIN_TILE_HEIGHT, "Heights do not correspond !"
+					assert len(tiles_symb) == cst.MAP_WIDTH, "Widths do not correspond !"
+					assert len(tiles_symb[0]) == cst.MAP_HEIGHT, "Heights do not correspond !"
 					found["TILES_ARRAY"] = True
 
 				# fetch the decoration coordinates
 				elif l == "DECORATION_COORDS" :
 					deco_coords = []
 					l = mapfile.readline().strip()
-					while l != "END" :
-						symbol,x,y = l.split('.')
-						deco_coords.append([symbol, int(x), int(y)])
+					while l != "END":
+						symbol, x, y = l.split()
+						deco_coords.append([symbol, float(x), float(y)])
 						l = mapfile.readline().strip()
 					found["DECORATION_COORDS"] = True
 
@@ -102,36 +102,24 @@ class Map:
 
 		# assign tiles to a dict from symbolic tiles
 		tiles = {}
-		for x in range(cst.TERRAIN_TILE_WIDTH):
-			for y in range(cst.TERRAIN_TILE_HEIGHT):
+		for x in range(cst.MAP_WIDTH):
+			for y in range(cst.MAP_HEIGHT):
 				cat, tile_type = tile_types[tiles_symb[x][y]]
 				tiles[x, y] = Tile(pos=(x*cst.TILE_PIXEL_SIZE, y*cst.TILE_PIXEL_SIZE), category=cat, tile_type=tile_type)
 
-		# assing decoration objects to a list
+		# assign decoration objects to a list
 		deco = []
 		for d in deco_coords :
 			cat, deco_type = deco_types[d[0]]
-			x,y = d[1],d[2]
-			deco.append(Decoration(pos=(x*cst.TILE_PIXEL_SIZE//cst.TILE_SIZE, y*cst.TILE_PIXEL_SIZE//cst.TILE_SIZE), category=cat, deco_type=deco_type))
-
+			x, y = d[1], d[2]
+			deco.append(Decoration(pos=(x*cst.TILE_PIXEL_SIZE, y*cst.TILE_PIXEL_SIZE), category=cat, deco_type=deco_type))
+		# sort it
+		deco.sort(key=lambda d: d.pos[0] + d.pos[1])
 		# we're done !
 		print("Map import is successful !")
-		return Map(tiles=tiles, deco = deco)
+		return Map(tiles=tiles, deco=deco)
 
-	def __getitem__(self, pos):
-		""" Allows direct access to the tiles, e.g. some_map[x, y] instead of some_map.tiles[x][y]. If y is not passed (some_map[x]), returns the complete row some_map.tiles[x]. """
-		if isinstance(pos, tuple):
-			x, y = pos
-			return self.tiles[x, y]
-		else:
-			x = pos
-			return self.tiles[x, 0]
-
-	def __setitem__(self, pos, tile):
-		""" Allows direct replacement of a tile, e.g. some_map[x, y] = new_tile """
-		self.tiles[pos] = tile
-
-	def __iter__(self):
+	def get_tiles(self):
 		""" Iterates over the map tiles, in descending depth (y) order. """
 		tiles_list = [tile for tile in self.tiles.values()]
 		tiles_list.sort(key=lambda tile: tile.pos[0] + tile.pos[1])
