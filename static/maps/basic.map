@@ -1,18 +1,21 @@
 WIDTH
-5
+6
 HEIGHT
-4
+6
 
 TILE_TYPES
 0 terrain grass
-1 terrain roadNorth
+1 terrain waterNorth
+2 terrain waterSouth
 END
 
 TILES_ARRAY
-10000
-00000
-00000
-00000
+000000
+222222
+111111
+000000
+000000
+000000
 END
 
 END_OF_FILE
