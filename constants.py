@@ -24,10 +24,9 @@ FPS = 30
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
+MAP_WIDTH = 13
 TILE_PIXEL_SIZE = 32  # pixels
 
-MAP_WIDTH = 13
-MAP_HEIGHT = 13
 
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # set a screen now (needed for the TilesLibrary)
 

@@ -33,10 +33,11 @@ class Instance:
 
 		# init the map
 		self.map = Map.import_map(map_name)
-		self.matrix = [[None for j in range(2*cst.MAP_WIDTH)] for i in range(2*cst.MAP_HEIGHT)]
+		self.matrix = [[None for j in range(2*cst.MAP_WIDTH)] for i in range(2*cst.MAP_WIDTH)]
 
 		self.player = mainTurret.MainTurret()
-
+		self.turrets = [self.player]
+		
 		# init the mobs
 		self.mobs = pygame.sprite.Group()
 		self.mobs.add(moblist.ChaserMob(pos=(300, 400), target=self.map.tiles[1, 0]))

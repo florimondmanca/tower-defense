@@ -76,8 +76,7 @@ class Map:
 					# must transpose columns and rows
 					tiles_symb = list(map(list, zip(*tiles_symb)))
 					# check dimensions are OK with the ones declared
-					assert len(tiles_symb) == cst.MAP_WIDTH, "Widths do not correspond !"
-					assert len(tiles_symb[0]) == cst.MAP_HEIGHT, "Heights do not correspond !"
+					assert (len(tiles_symb) == cst.MAP_WIDTH or len(tiles_symb[0]) == cst.MAP_WIDTH), "Widths do not correspond !"
 					found["TILES_ARRAY"] = True
 
 				# fetch the decoration coordinates
@@ -103,16 +102,16 @@ class Map:
 		# assign tiles to a dict from symbolic tiles
 		tiles = {}
 		for x in range(cst.MAP_WIDTH):
-			for y in range(cst.MAP_HEIGHT):
+			for y in range(cst.MAP_WIDTH):
 				cat, tile_type = tile_types[tiles_symb[x][y]]
-				tiles[x, y] = Tile(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_HEIGHT//2)*cst.TILE_PIXEL_SIZE), category=cat, tile_type=tile_type)
+				tiles[x, y] = Tile(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE), category=cat, tile_type=tile_type)
 
 		# assign decoration objects to a list
 		deco = []
 		for d in deco_coords :
 			cat, deco_type = deco_types[d[0]]
 			x, y = d[1], d[2]
-			deco.append(Decoration(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_HEIGHT//2)*cst.TILE_PIXEL_SIZE), category=cat, deco_type=deco_type))
+			deco.append(Decoration(pos=((x - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE, (y - cst.MAP_WIDTH//2)*cst.TILE_PIXEL_SIZE), category=cat, deco_type=deco_type))
 		# sort it
 		deco.sort(key=lambda d: d.pos[0] + d.pos[1])
 		# we're done !

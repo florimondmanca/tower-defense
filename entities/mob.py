@@ -10,6 +10,7 @@ import pygame
 import math
 from isometric import IsoSprite, isoutils
 import constants as cst
+from . import misc
 
 # ------ Mob Class ------
 
@@ -43,6 +44,8 @@ class Mob(IsoSprite):
         self.hp = 0
 
 
+    ## ------ Graphical functions ------
+
     def update_image(self):
         mask_rect = pygame.Rect(self.anim_key*self.size, self.state*self.size, self.size, self.size)
         self.image = self.spritesheet.subsurface(mask_rect)
@@ -69,3 +72,53 @@ class Mob(IsoSprite):
             pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
             pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
             pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
+
+    ## ------ Behavior and AI functions ------
+
+    def find_path(self,obstacles, target):
+        '''
+        find_path(self,obstacles) -> path list
+            implementation of the A* algorithm. The heuristic used is the euclidean distance.
+            return a list of tiles to walk on in order to get to the target avoiding obstacles. The path is the shortest possible path
+            if no path is available, returns None.
+
+            obstacles = dict where dict[(i,j)] is True if and only if there is an obstacle on case (i,j)
+            target = the coordinate tupple of the case to reach
+        '''
+
+        # Data structures
+        get_default_dict = lambda default_value: dict(((i, j), default_value) for i in range(cst.MAP_WIDTH) for j in range(cst.MAP_WIDTH))
+        passage = get_default_dict(None)
+        distance = get_default_dict(float('inf'))
+        seen = get_default_dict(False)
+        pq = PriorityQueue()
+
+        # Initialisation
+        seen[self.case] = True
+        distance[self.case] = 0
+        pq.put((0,self.case))
+
+        # Processing
+        try :
+            while not seen[target] :
+                prio, case = pq.get()
+                if not seen[case] :
+                    for vois in get_neightbors(case,obstacles):
+                        new_distance = distance[case] + heuristic(target, vois)
+                        if not seen[vois] and new_distance < distance[vois]:
+                            pq.put((new_distance, vois))
+                            distance[vois] = new_distance
+                            passage[vois] = case
+                seen[case] = True
+
+        except Empty : return None
+        else :
+            # Post-Processing. Extracting path from datas
+            shortest_path = []
+            pos = target
+            while pos != self.case :
+                shortest_path.append(pos)
+                pos = passage[pos]
+            shortest_path.reverse()  # shortest_path was (goal -> init) and we want (init -> goal)
+            return shortest_path
+

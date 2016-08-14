@@ -17,7 +17,7 @@ class Turret(IsoSprite):
     '''Classe de base des tourelles posables par le joueur '''
 
     def __init__(self, path_to_image, pos):
-
+        IsoSprite.__init__(self, path_to_image, pos)
         # game settings
         self.hp = 0
         self.hit_ground = True
@@ -31,6 +31,4 @@ class Turret(IsoSprite):
         super().display(screen)
         if cst.DEBUG:
             pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
-            pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
             pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
-            pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
