@@ -36,6 +36,7 @@ def options(screen,clock):
 
     while True:
         clock.tick(cst.FPS)
+        mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if menu_button.hover:
@@ -47,11 +48,15 @@ def options(screen,clock):
                     elif music_button.text == "OFF":
                         music_button.change_text("ON")
                         pygame.mixer.unpause()
-        screen.fill(cst.TURQUOISE)
+        screen.fill(cst.GRASS)
         options_message.display(screen)
-        menu_button.update(screen)
+        menu_button.update(mouse_pos)
+        menu_button.display(screen)
+
         music_message.display(screen)
-        music_button.update(screen)
+        music_button.update(mouse_pos)
+        music_button.display(screen)
+
         credits_message1.display(screen)
         credits_message2.display(screen)
         pygame.display.flip()
@@ -71,15 +76,20 @@ def instructions(screen, clock):
     menu_button = menugui.Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
     while True:
         clock.tick(cst.FPS)
+        mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if menu_button.hover:
                     return
-        screen.fill(cst.TURQUOISE)
+        screen.fill(cst.GRASS)
+
         instructions_message.display(screen)
         instructions1.display(screen)
         instructions2.display(screen)
-        menu_button.update(screen)
+
+        menu_button.update(mouse_pos)
+        menu_button.display(screen)
+
         pygame.display.flip()
 
 
@@ -108,6 +118,7 @@ def run_game():
 
     while True:
         clock.tick(cst.FPS)
+        mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if play_button.hover:
@@ -127,7 +138,9 @@ def run_game():
                     pygame.quit()
                     return
 
-        screen.fill(cst.TURQUOISE)
+        screen.fill(cst.GRASS)
         title.display(screen)
-        buttons.update(screen)
+        buttons.update(mouse_pos)
+        for but in buttons :
+            but.display(screen)
         pygame.display.flip()

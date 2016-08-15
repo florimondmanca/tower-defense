@@ -33,7 +33,7 @@ class Instance:
 		self.screen_height = cst.SCREEN_HEIGHT
 
 		# init the GUI
-		self.turret_bar = gamegui.TurretBar()
+		self.gui = gamegui.GUI()
 
 		# init the map
 		self.map = Map.import_map(map_name)
@@ -48,9 +48,9 @@ class Instance:
 
 		self.RUNNING = True
 
-	def update(self):
+	def update(self, mouse_pos, mouse_click):
 		self.mobs.update()
-		self.turret_bar.update()
+		self.gui.update(mouse_pos, mouse_click)
 
 	def rotate_all(self, direction):
 		""" Rotates the map by 90 degrees (clockwise if direction is 'left', counter-clockwise if direction is 'right') """
@@ -65,7 +65,7 @@ class Instance:
 			getattr(turret, func)()
 
 	def display(self):
-		self.screen.fill(pygame.Color("white"))
+		self.screen.fill(cst.PAPER)
 		for tile in self.map.get_tiles():
 			tile.display(self.screen)
 		for deco in self.map.deco:
@@ -74,7 +74,7 @@ class Instance:
 			mob.display(self.screen)
 		for turret in self.turrets:
 			turret.display(self.screen)
-		self.turret_bar.display(self.screen)
+		self.gui.display(self.screen)
 
 		# DEBUG
 		if cst.DEBUG :
@@ -84,6 +84,8 @@ class Instance:
 
 	def run(self):
 		while self.RUNNING:
+			mouse_click = False
+			mouse_pos = pygame.mouse.get_pos()
 			self.clock.tick(cst.FPS)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -91,7 +93,10 @@ class Instance:
 				elif event.type == pygame.KEYDOWN:
 					if event.key in key_to_function:
 						key_to_function[event.key](self)
-			self.update()
+				elif event.type == pygame.MOUSEBUTTONDOWN :
+					mouse_click = True
+
+			self.update(mouse_pos, mouse_click)
 			self.display()
 			pygame.display.flip()
 

@@ -40,10 +40,12 @@ NONE_TILE_PATH = os.path.join(IMG_DIR, *["tiles", "none", "none.png"])
 PAPER = (255, 245, 168)
 TURQUOISE = pygame.Color("dark turquoise")
 WHITE = pygame.Color("white")
+YELLOW = pygame.Color("yellow")
 GREY = (165, 185, 185)
 BLACK = pygame.Color("black")
 BLUE = (20, 60, 110)
 RED = (250,0,0)
+GRASS = (139,181,74)
 
 # Fonts
 pygame.font.init()
@@ -53,8 +55,13 @@ FONT_PATH = os.path.join(FONT_DIR,"speculum.ttf")
 DRAW_FONT = pygame.font.Font(FONT_PATH, 100)
 
 TEXT_FONT = pygame.font.Font(FONT_PATH,  28)
-TEXT_FONT_2 = pygame.font.Font(FONT_PATH, 25)
 
 CREDIT_FONT = pygame.font.Font(FONT_PATH, 22)
 
 TITLE_FONT = pygame.font.Font(FONT_PATH, 50)
+
+GUI_TURRET_FONT = pygame.font.Font(FONT_PATH, 15)
+
+# GUI Constants
+
+SPACING = 40 # pixels

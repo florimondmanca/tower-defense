@@ -9,7 +9,7 @@ import os
 from copy import copy
 import constants as cst
 from isometric import isoutils
-from . import miscgui
+from . import miscgui,menugui
 
 map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
 
@@ -38,23 +38,27 @@ class TurretBar:
 		self.bgimg,self.bgrect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
 		self.bgrect.topleft = (0,0)
 		self.turrets = pygame.sprite.Group()
-		self.turrets.add(GraphicButton((10,20), None))
-		self.turrets.add(GraphicButton((52,20), None))
-		self.turrets.add(GraphicButton((94,20), None))
+		self.turrets.add(GraphicButton((30,20), None))
+		self.turrets.add(GraphicButton((102,20), None))
+		self.turrets.add(GraphicButton((174,20), None))
 
-	def update(self):
-		mouse_pos = pygame.mouse.get_pos()
-		self.turrets.update(mouse_pos)
+	def update(self, mouse_pos, mouse_click):
+		if mouse_click :
+			for tur in self.turrets :
+				tur.selected = False
+		self.turrets.update(mouse_pos, mouse_click)
 
 	def display(self,screen = pygame.display.get_surface()):
 		screen.blit(self.bgimg,self.bgrect)
 		for t in self.turrets :
 			t.display(screen)
 
+
+
 class GraphicButton(pygame.sprite.Sprite):
 	'''Bouton de selection d'une tourelle dans la GUI '''
 
-	def __init__(self,topleft, data_number, font=cst.TEXT_FONT_2):
+	def __init__(self, topleft, data_number, font=cst.GUI_TURRET_FONT):
 		pygame.sprite.Sprite.__init__(self)
 
 		self.data = None #La tourelle associée au bouton
@@ -62,13 +66,21 @@ class GraphicButton(pygame.sprite.Sprite):
 
 		self.preview_rect.topleft = topleft
 
-		self.text = None
-		self.price = None
+		self.font = cst.GUI_TURRET_FONT
+		
+		self.text = "Test"
+		self.text_rect = font.render(self.text, True, cst.WHITE).get_rect()
+		self.text_rect.midtop = (self.preview_rect.midbottom[0], self.preview_rect.midbottom[1]+5)
+		
+		self.price = "100"
+		self.price_rect = font.render(self.price, True, cst.PAPER).get_rect()
+		self.price_rect.midtop = (self.text_rect.midbottom[0], self.text_rect.midbottom[1]+5)
 
 		self.hover = False
 		self.selected = False
 
-		self.rect = self.preview_rect # temporary
+		self.rect = self.preview_rect.union(self.text_rect).union(self.price_rect)
+
 
 	def get_color(self, color):
 		"""
@@ -81,18 +93,54 @@ class GraphicButton(pygame.sprite.Sprite):
 			b = max(b-70, 0)
 		return (r, g, b)
 
-	def update(self,mouse_pos):
+
+	def update(self, mouse_pos, mouse_click):
 		if not self.hover:
 			if self.rect.collidepoint(mouse_pos):
 				self.hover = True
 		else:
 			if not self.rect.collidepoint(mouse_pos):
 				self.hover = False
-		#text = self.font.render(self.text, True, self.get_color(white))
-		#price = self.font.render(self.price, True, self.get_color(paper))
+		if mouse_click :
+			if not self.selected :
+				if self.rect.collidepoint(mouse_pos) :
+					self.selected = True
+			else :
+				if self.rect.collidepoint(mouse_pos) :
+					self.selected = False
+
 
 	def display(self, screen = pygame.display.get_surface()):
 		screen.blit(self.preview, self.preview_rect)
+		
+		text = self.font.render(self.text, True, self.get_color(cst.PAPER))
+		screen.blit(text,self.text_rect)
+
+		price = self.font.render(self.price, True, self.get_color(cst.PAPER))
+		screen.blit(price,self.price_rect)
+
+		if self.selected :
+			miscgui.draw_frame(screen, self.rect, cst.YELLOW)
+
+class GUI:
+	"""
+	The class that deals with the GUI of the game.
+	Handles the top turret selector, the score, and various buttons
+	"""
+
+	def __init__(self):
+		self.turret_bar = TurretBar()
+		self.score = None
+		self.money = None
+		self.next_wave = menugui.Button("Next Wave", (1100,30), font=cst.TEXT_FONT, color=cst.WHITE)
+
+	def update(self, mouse_pos, mouse_click):
+		self.turret_bar.update(mouse_pos, mouse_click)
+		self.next_wave.update(mouse_pos)
+
+	def display(self,screen = pygame.display.get_surface()):
+		self.turret_bar.display(screen)
+		self.next_wave.display(screen)
 
 
 class Cursor(pygame.sprite.Sprite):

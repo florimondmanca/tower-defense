@@ -37,3 +37,11 @@ def rotate_right(pos, center=map_center):
 	return [-(pos[1] - center[1]) + center[0],
 			(pos[0] - center[0]) + center[1]]
 
+
+def draw_frame(screen, rect, color):
+	pygame.draw.line(screen, color, rect.topleft, rect.topright)
+	pygame.draw.line(screen, color, rect.topright, rect.bottomright)
+	pygame.draw.line(screen, color, rect.bottomright, rect.bottomleft)
+	pygame.draw.line(screen, color, rect.bottomleft, rect.topleft)
+
+

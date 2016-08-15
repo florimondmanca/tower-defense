@@ -59,22 +59,21 @@ class Button(pygame.sprite.Sprite):
 		self.hover = False  # True when mouse hovers the button
 		self.color = color #color du type (r,g,b) avec 0<= r,g,b <= 255
 
-	def update(self, bliton=None):
+	def update(self, mouse_pos):
 		"""
 		Updates the button's state, especially deals with highlighting.
 		"""
-		if bliton is None :
-			bliton = pygame.display.get_surface()	
-		mouse_pos = pygame.mouse.get_pos()
 		if not self.hover:
 			if self.rect.collidepoint(mouse_pos):
 				self.hover = True
 		else:
 			if not self.rect.collidepoint(mouse_pos):
 				self.hover = False
+
+	def display(self, screen = pygame.display.get_surface()):
+		screen.blit(self.image, self.rect)
 		if self.hover:
-			pygame.draw.line(bliton, self.color, self.rect.bottomright, self.rect.bottomleft)
-		bliton.blit(self.image, self.rect)
+			pygame.draw.line(screen, self.color, self.rect.bottomright, self.rect.bottomleft)
 
 	def get_color(self):
 		"""
