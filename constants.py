@@ -21,16 +21,16 @@ MAP_EXT = ".map"
 
 # General game constants
 FPS = 60
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
+SCREEN_WIDTH, SCREEN_HEIGHT = 1280,720
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
-MAP_WIDTH = 13
+MAP_WIDTH = 17
 TILE_PIXEL_SIZE = 32  # pixels
 
 
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # set a screen now (needed for the TilesLibrary)
 
-CASE_SIZE = 120  # base size for buttons, messages, etc.
+CASE_SIZE = 150  # base size for buttons, messages, etc.
 
 # Map-system-related constants
 NONE_TILE = "none"  # the name of the blank tile (must be in terrain folder)
@@ -52,9 +52,9 @@ FONT_PATH = os.path.join(FONT_DIR,"speculum.ttf")
 
 DRAW_FONT = pygame.font.Font(FONT_PATH, 100)
 
-TEXT_FONT = pygame.font.Font(FONT_PATH,  18)
-TEXT_FONT_2 = pygame.font.Font(FONT_PATH, 15)
+TEXT_FONT = pygame.font.Font(FONT_PATH,  28)
+TEXT_FONT_2 = pygame.font.Font(FONT_PATH, 25)
 
-CREDIT_FONT = pygame.font.Font(FONT_PATH, 12)
+CREDIT_FONT = pygame.font.Font(FONT_PATH, 22)
 
-TITLE_FONT = pygame.font.Font(FONT_PATH, 40)
+TITLE_FONT = pygame.font.Font(FONT_PATH, 50)

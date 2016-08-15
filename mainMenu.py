@@ -12,7 +12,7 @@ pygame.init()
 screen = pygame.display.set_mode((800,600))
 
 import constants as cst
-from guiutils import Message, Button, Cursor, Score
+from gui import menugui
 from instance import Instance
 
 # ------ Functions ------
@@ -25,13 +25,13 @@ def options(screen,clock):
     """
 
     hw = cst.SCREEN_WIDTH//2
-    options_message = Message("Options", (hw, cst.CASE_SIZE), font=cst.TITLE_FONT)
-    music_message = Message("Music:  ", (hw, int(1.5*cst.CASE_SIZE)))
-    music_button = Button("ON", (music_message.rect.right, int(1.5*cst.CASE_SIZE)))
-    menu_button = Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
-    credits_message1 = Message( "Game by Guillaume Coiffier and Florimond Manca",
+    options_message = menugui.Message("Options", (hw, cst.CASE_SIZE), font=cst.TITLE_FONT)
+    music_message = menugui.Message("Music:  ", (hw, int(1.5*cst.CASE_SIZE)))
+    music_button = menugui.Button("ON", (music_message.rect.right, int(1.5*cst.CASE_SIZE)))
+    menu_button = menugui.Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
+    credits_message1 = menugui.Message( "Game by Guillaume Coiffier and Florimond Manca",
         (hw, 4*cst.CASE_SIZE-24-2), font=cst.CREDIT_FONT)
-    credits_message2 = Message( "Music by Florimond Manca",
+    credits_message2 = menugui.Message( "Music by Florimond Manca",
         (hw, 4*cst.CASE_SIZE-12), font=cst.CREDIT_FONT)
 
     while True:
@@ -62,13 +62,13 @@ def instructions(screen, clock):
     Runs the loop for the INSTRUCTIONS screen.
     """
     hw = cst.SCREEN_WIDTH//2
-    instructions_message = Message("Instructions", (hw, cst.CASE_SIZE),
+    instructions_message = menugui.Message("Instructions", (hw, cst.CASE_SIZE),
         font=cst.TITLE_FONT)
-    instructions1 = Message("this is a message",
+    instructions1 = menugui.Message("this is a message",
         (hw, int(1.5*cst.CASE_SIZE)), font=cst.CREDIT_FONT)
-    instructions2 = Message("this is an other message",
+    instructions2 = menugui.Message("this is an other message",
         (hw, 18+int(1.5*cst.CASE_SIZE)), font=cst.CREDIT_FONT)
-    menu_button = Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
+    menu_button = menugui.Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
     while True:
         clock.tick(cst.FPS)
         for event in pygame.event.get():
@@ -93,14 +93,14 @@ def run_game():
     pygame.display.set_caption("BubbleRush")
     clock = pygame.time.Clock()
     hw = cst.SCREEN_WIDTH//2
-    title = Message("BubbleRush", (hw, cst.CASE_SIZE//2),
+    title = menugui.Message("BubbleRush", (hw, cst.CASE_SIZE//2),
                     font=cst.TITLE_FONT)
     buttons = pygame.sprite.Group()
-    play_button = Button("Play", (hw, int(1.5*cst.CASE_SIZE)))
-    tuto_button = Button("Tutorial", (hw, int(2*cst.CASE_SIZE)))
-    instructions_button = Button("Instructions", (hw, 2.5*cst.CASE_SIZE))
-    options_button = Button("Options", (hw, int(3*cst.CASE_SIZE)))
-    quit_button = Button("Quit", (hw, int(3.5*cst.CASE_SIZE)))
+    play_button = menugui.Button("Play", (hw, int(1.5*cst.CASE_SIZE)))
+    tuto_button = menugui.Button("Tutorial", (hw, int(2*cst.CASE_SIZE)))
+    instructions_button = menugui.Button("Instructions", (hw, 2.5*cst.CASE_SIZE))
+    options_button = menugui.Button("Options", (hw, int(3*cst.CASE_SIZE)))
+    quit_button = menugui.Button("Quit", (hw, int(3.5*cst.CASE_SIZE)))
     
     buttons.add([play_button, tuto_button, instructions_button, options_button, quit_button])
 

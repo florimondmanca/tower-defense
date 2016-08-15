@@ -5,11 +5,11 @@
 import pygame
 from time import time
 import constants as cst
-from guiutils import load_image, Message, Button, GraphicButton, Cursor, Score
+from gui import miscgui, gamegui
 from tiles.map import Map
 from entities import moblist,turretlist,mainTurret
 from isometric import isoutils
-import guiutils
+from gui import *
 
 # ------ Classe Principale ------
 
@@ -17,6 +17,7 @@ import guiutils
 key_to_function = {
 	pygame.K_LEFT: lambda self: self.rotate_all("left"),
 	pygame.K_RIGHT: lambda self: self.rotate_all("right"),
+	pygame.K_ESCAPE : lambda self: self.quit()
 }
 
 class Instance:
@@ -31,6 +32,9 @@ class Instance:
 		self.screen_width = cst.SCREEN_WIDTH
 		self.screen_height = cst.SCREEN_HEIGHT
 
+		# init the GUI
+		self.turret_bar = gamegui.TurretBar()
+
 		# init the map
 		self.map = Map.import_map(map_name)
 		self.matrix = [[None for j in range(2*cst.MAP_WIDTH)] for i in range(2*cst.MAP_WIDTH)]
@@ -42,8 +46,11 @@ class Instance:
 		self.mobs = pygame.sprite.Group()
 		self.mobs.add(moblist.ChaserMob(tile_pos=(9, 12), target=self.map.tiles[1, 0]))
 
+		self.RUNNING = True
+
 	def update(self):
 		self.mobs.update()
+		self.turret_bar.update()
 
 	def rotate_all(self, direction):
 		""" Rotates the map by 90 degrees (clockwise if direction is 'left', counter-clockwise if direction is 'right') """
@@ -67,13 +74,16 @@ class Instance:
 			mob.display(self.screen)
 		for turret in self.turrets:
 			turret.display(self.screen)
+		self.turret_bar.display(self.screen)
+
+		# DEBUG
 		if cst.DEBUG :
 			# mid-screen lines
 			pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
 			pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
 
 	def run(self):
-		while True:
+		while self.RUNNING:
 			self.clock.tick(cst.FPS)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -84,6 +94,9 @@ class Instance:
 			self.update()
 			self.display()
 			pygame.display.flip()
+
+	def quit(self):
+		self.RUNNING = False
 
 	def pause(self):
 		'''Runs the pause menu '''
