@@ -26,7 +26,7 @@ class Map:
 	def import_map(map_name):
 		""" Imports a map 'map_name' from the static/maps folder. map_name must end with {} """.format(cst.MAP_EXT)
 
-		print("\nImporting map '{}'...".format(map_name))
+		print("Importing map '{}'...".format(map_name))
 		if not map_name.endswith(cst.MAP_EXT):
 			raise TypeError("Cannot import map with name {}. Map names must end with '{}'.".format(map_name, cst.MAP_EXT))
 

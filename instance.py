@@ -7,22 +7,27 @@ from time import time
 import constants as cst
 from gui import miscgui, gamegui
 from tiles.map import Map
-from entities import moblist,turretlist,mainTurret
+from entities import moblist, turretlist, mainTurret
 from isometric import isoutils
 from gui import *
 
 # ------ Classe Principale ------
 
-# key_to_function : simple mapping from keys to Instance's functions
+# key_to_function and button_to_function : simple mapping from keys and mouse buttons to Instance's functions
 key_to_function = {
 	pygame.K_LEFT: lambda self: self.rotate_all("left"),
 	pygame.K_RIGHT: lambda self: self.rotate_all("right"),
 	pygame.K_ESCAPE : lambda self: self.quit()
 }
+button_to_function = {
+	1: lambda x: None,  # left button
+	3:  lambda x: None,  # right button
+}
+
 
 class Instance:
 	"""
-	Runs a game for testing isometric perspective
+	Runs a game instance !
 	"""
 	def __init__(self, map_name="basic.map"):
 		# init pygame, screen and clock
@@ -48,9 +53,9 @@ class Instance:
 
 		self.RUNNING = True
 
-	def update(self, mouse_pos, mouse_click):
+	def update(self, mouse_event, mouse_click):
 		self.mobs.update()
-		self.gui.update(mouse_pos, mouse_click)
+		self.gui.update(mouse_event, mouse_click)
 
 	def rotate_all(self, direction):
 		""" Rotates the map by 90 degrees (clockwise if direction is 'left', counter-clockwise if direction is 'right') """
@@ -84,20 +89,22 @@ class Instance:
 
 	def run(self):
 		while self.RUNNING:
-			mouse_click = False
-			mouse_pos = pygame.mouse.get_pos()
+			click_event = None
+			mouse_event = None
 			self.clock.tick(cst.FPS)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
+					print("Quit game")
 					return "PYGAME_QUIT"
 				elif event.type == pygame.KEYDOWN:
 					if event.key in key_to_function:
 						key_to_function[event.key](self)
-				elif event.type == pygame.MOUSEBUTTONDOWN :
-					if event.button in button_to_function:
-						button_to_function[event.button](self)
-
-			self.update(mouse_pos, mouse_click)
+				elif event.type == pygame.MOUSEBUTTONDOWN:
+					if event.button in (1, 3):
+						click_event = event
+				elif event.type == pygame.MOUSEMOTION:
+					mouse_event = event
+			self.update(mouse_event, click_event)
 			self.display()
 			pygame.display.flip()
 

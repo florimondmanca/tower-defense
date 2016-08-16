@@ -35,7 +35,7 @@ NONE_TILE = "none"  # the name of the blank tile (must be in terrain folder)
 NONE_TILE_PATH = os.path.join(IMG_DIR, *["tiles", "none", "none.png"])
 
 # Colors
-PAPER = (255, 245, 168)
+PAPER = (244, 234, 200)  #(255, 245, 168)
 TURQUOISE = pygame.Color("dark turquoise")
 WHITE = pygame.Color("white")
 YELLOW = pygame.Color("yellow")

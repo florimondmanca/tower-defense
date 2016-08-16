@@ -9,7 +9,7 @@ import os
 from copy import copy
 import constants as cst
 from isometric import isoutils
-from . import miscgui,menugui
+from . import miscgui, menugui
 
 map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
 
@@ -38,25 +38,25 @@ class TurretBar:
 	''' La barre de selection des tourelles en haut de l'écran'''
 
 	def __init__(self):
-		self.bgimg,self.bgrect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
-		self.bgrect.topleft = (0,0)
+		self.bgimg, self.bgrect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
+		self.bgrect.topleft = (0, 0)
 		self.turrets = pygame.sprite.Group()
-		self.turrets.add(GraphicButton((30,cst.ST_Y), None))
-		self.turrets.add(GraphicButton((30,cst.LT_Y), None, large = True))
+		self.turrets.add(GraphicButton((30, cst.ST_Y), None))
+		self.turrets.add(GraphicButton((30, cst.LT_Y), None, large=True))
 
-		self.turrets.add(GraphicButton((102,cst.ST_Y), None))
-		self.turrets.add(GraphicButton((102,cst.LT_Y), None, large = True))
+		self.turrets.add(GraphicButton((102, cst.ST_Y), None))
+		self.turrets.add(GraphicButton((102, cst.LT_Y), None, large=True))
 
-		self.turrets.add(GraphicButton((174,cst.ST_Y), None))
-		self.turrets.add(GraphicButton((174,cst.LT_Y), None, large = True))
+		self.turrets.add(GraphicButton((174, cst.ST_Y), None))
+		self.turrets.add(GraphicButton((174, cst.LT_Y), None, large=True))
 
-	def update(self, mouse_pos, mouse_click):
-		if mouse_click :
-			for tur in self.turrets :
-				tur.selected = False
-		self.turrets.update(mouse_pos, mouse_click)
+	def update(self, mouse_event, click_event):
+		if click_event is not None:
+			for t in self.turrets:
+				t.selected = False
+		self.turrets.update(mouse_event, click_event)
 
-	def display(self,screen = pygame.display.get_surface()):
+	def display(self, screen):
 		screen.blit(self.bgimg,self.bgrect)
 		for t in self.turrets :
 			t.display(screen)
@@ -150,30 +150,29 @@ class GraphicButton(pygame.sprite.Sprite):
 			b = max(b-70, 0)
 		return (r, g, b)
 
+	def update(self, mouse_event, click_event):
+		if mouse_event is not None:
+			pos = mouse_event.pos
+			if not self.hover:
+				if self.rect.collidepoint(pos):
+					self.hover = True
+			else:
+				if not self.rect.collidepoint(pos):
+					self.hover = False
+			if click_event is not None and click_event.button == 1:
+				if not self.selected:
+					if self.rect.collidepoint(pos):
+						self.selected = True
+				else:
+					if self.rect.collidepoint(pos):
+						self.selected = False
 
-	def update(self, mouse_pos, mouse_click):
-		if not self.hover:
-			if self.rect.collidepoint(mouse_pos):
-				self.hover = True
-		else:
-			if not self.rect.collidepoint(mouse_pos):
-				self.hover = False
-		if mouse_click :
-			if not self.selected :
-				if self.rect.collidepoint(mouse_pos) :
-					self.selected = True
-			else :
-				if self.rect.collidepoint(mouse_pos) :
-					self.selected = False
-
-
-	def display(self, screen = pygame.display.get_surface()):
+	def display(self, screen):
 		screen.blit(self.preview, self.rect)
-		if self.hover :
+		if self.hover:
 			self.description_window.display(screen)
-		if self.selected :
+		if self.selected:
 			miscgui.draw_frame(screen, self.rect, cst.YELLOW)
-
 
 
 class GUI:
@@ -188,20 +187,18 @@ class GUI:
 		self.money = 400
 		self.wave = 0
 
-		self.next_wave = menugui.Button("Next Wave", (0,0), font=cst.TEXT_FONT, color=cst.RED)
-		self.next_wave.rect.bottomright = (1270,710)
+		self.next_wave = menugui.Button("Next Wave", (0, 0), font=cst.TEXT_FONT, color=cst.RED)
+		self.next_wave.rect.bottomright = (1270, 710)
 
-		self.disp_score = Score("Score :",(10,610), self.score)
-		self.money_score = Score("Money :", (10,640), self.money)
-		self.wave_score = Score("Wave  :", (10,670), self.wave)
+		self.disp_score = Score("Score :", (10, 610), self.score)
+		self.money_score = Score("Money :", (10, 640), self.money)
+		self.wave_score = Score("Wave  :", (10, 670), self.wave)
 
+	def update(self, mouse_event, mouse_click):
+		self.turret_bar.update(mouse_event, mouse_click)
+		self.next_wave.update(mouse_event, mouse_click)
 
-	def update(self, mouse_pos, mouse_click):
-		self.turret_bar.update(mouse_pos, mouse_click)
-		self.next_wave.update(mouse_pos)
-
-
-	def display(self,screen = pygame.display.get_surface()):
+	def display(self, screen):
 		self.turret_bar.display(screen)
 		self.next_wave.display(screen)
 		self.disp_score.display(screen)
@@ -209,13 +206,9 @@ class GUI:
 		self.wave_score.display(screen)
 
 
-
 class Cursor:
 	"""
 	A textual cursor which will follow the mouse's moves.
-	:param parent: the Surface which the cursor belongs to.
-	:param font=TEXT_FONT: the text font.
-	:param color=blue: the text color.
 	"""
 	def __init__(self, parent):
 		self.pos = (0, 0)
@@ -228,19 +221,18 @@ class Cursor:
 		if obj is None:
 			self.selected = None
 			self.image, self.rect = self.cursor_image, self.cursor_rect
-		else :
+		else:
 			self.selected = obj
 			self.image, self.rect = load_image(self.selected.preview)
 
-	def update(self, mouse_pos):
+	def update(self, mouse_event, click_event):
 		"""
-		Updates the cursor's state, especially brings it to the position of the
-		mouse.
+		Updates the cursor's state, especially brings it to the position of the mouse.
 		"""
-		x,y = mouse_pos
+		x, y = mouse_event.pos
 		self.rect.topleft = ((x//10)*10, (y//10)*10)
-		if x+self.rect.width < 601 and x>self.rect.width//2:
+		if x + self.rect.width < 601 and x > self.rect.width//2:
 			self.parent.blit(self.image, self.rect)
 
-	def display(self, screen = pygame.display.get_surface()):
+	def display(self, screen):
 		screen.blit(self.image, self.rect)

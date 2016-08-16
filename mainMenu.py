@@ -36,8 +36,10 @@ def options(screen,clock):
 
     while True:
         clock.tick(cst.FPS)
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_event = None
         for event in pygame.event.get():
+            if event.type == pygame.MOUSEMOTION:
+                mouse_event = event
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if menu_button.hover:
                     return
@@ -50,11 +52,11 @@ def options(screen,clock):
                         pygame.mixer.unpause()
         screen.fill(cst.GRASS)
         options_message.display(screen)
-        menu_button.update(mouse_pos)
+        menu_button.update(mouse_event)
         menu_button.display(screen)
 
         music_message.display(screen)
-        music_button.update(mouse_pos)
+        music_button.update(mouse_event)
         music_button.display(screen)
 
         credits_message1.display(screen)
@@ -118,12 +120,16 @@ def run_game():
 
     while True:
         clock.tick(cst.FPS)
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_event = None
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if event.type == pygame.MOUSEMOTION:
+                mouse_event = event
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if play_button.hover:
-                    game = Instance()
-                    if game.run() == "PYGAME_QUIT":
+                    print("-- Instance started --")
+                    output = Instance().run()
+                    print("-- Instance finished --")
+                    if output == "PYGAME_QUIT":
                         pygame.quit()
                         return
                 elif tuto_button.hover:
@@ -140,7 +146,7 @@ def run_game():
 
         screen.fill(cst.GRASS)
         title.display(screen)
-        buttons.update(mouse_pos)
+        buttons.update(mouse_event)
         for but in buttons :
             but.display(screen)
         pygame.display.flip()
