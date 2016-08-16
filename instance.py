@@ -5,11 +5,10 @@
 import pygame
 from time import time
 import constants as cst
-from gui import miscgui, gamegui
+import gui
 from tiles.map import Map
 from entities import moblist, turretlist, mainTurret
 from isometric import isoutils
-from gui import *
 import time
 
 # ------ Classe Principale ------
@@ -39,7 +38,7 @@ class Instance:
 		self.screen_height = cst.SCREEN_HEIGHT
 
 		# init the GUI
-		self.gui = gamegui.GUI()
+		self.gui = gui.game.GUI()
 
 		# init the map
 		self.map = Map.import_map(map_name)

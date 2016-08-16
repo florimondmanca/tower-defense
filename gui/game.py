@@ -9,17 +9,17 @@ import os
 from copy import copy
 import constants as cst
 from isometric import isoutils
-from . import miscgui, menugui
+from . import misc, menu
 
 map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
 
 class Score:
 	def __init__(self, msg, pos, value=0, color = cst.RED):
-		self.msg = menugui.Message(msg, pos, color = color, center = False)
+		self.msg = menu.Message(msg, pos, color = color, center = False)
 		self.l = self.msg.rect.right + 5
 
 		self.val = value
-		self.val_msg = menugui.Message(str(value), pos, color = color, center = False)
+		self.val_msg = menu.Message(str(value), pos, color = color, center = False)
 		self.val_msg.rect.left = self.l
 
 		self.pos = pos
@@ -38,7 +38,7 @@ class TurretBar:
 	''' La barre de selection des tourelles en haut de l'écran'''
 
 	def __init__(self):
-		self.bgimg, self.bgrect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
+		self.bgimg, self.bgrect = misc.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
 		self.bgrect.topleft = (0, 0)
 		self.turrets = pygame.sprite.Group()
 		self.turrets.add(TurretButton((30, cst.ST_Y), None))
@@ -69,7 +69,7 @@ class DescriptionWindow:
 		datas = a dict containing entries "preview","title","descr","price", "large"
 	"""
 	def __init__(self, datas):
-		self.bg, self.bg_rect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","desc.png"]))
+		self.bg, self.bg_rect = misc.load_image(os.path.join(cst.IMG_DIR, *["gui","desc.png"]))
 		self.bg_rect.topleft = (2,102)
 		self.dict = datas
 		self.toblit = []
@@ -117,7 +117,7 @@ class TurretButton(pygame.sprite.Sprite):
 
 		self.data = None  # la vraie tourelle associée au bouton
 
-		self.preview, self.rect =  miscgui.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test{}.png".format("_large" if large else "")])) 
+		self.preview, self.rect =  misc.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test{}.png".format("_large" if large else "")])) 
 		self.rect.topleft = topleft
 		
 		self.title = "Test"
@@ -159,7 +159,7 @@ class TurretButton(pygame.sprite.Sprite):
 		if self.hover:
 			self.description_window.display(screen)
 		if self.selected:
-			miscgui.draw_frame(screen, self.rect, cst.YELLOW)
+			misc.draw_frame(screen, self.rect, cst.YELLOW)
 
 
 class GUI:
@@ -174,7 +174,7 @@ class GUI:
 		self.money = 400
 		self.wave = 0
 
-		self.next_wave = menugui.Button("Next Wave", (0, 0), font=cst.TEXT_FONT, color=cst.RED)
+		self.next_wave = menu.Button("Next Wave", (0, 0), font=cst.TEXT_FONT, color=cst.RED)
 		self.next_wave.rect.bottomright = (1270, 710)
 
 		self.disp_score = Score("Score :", (10, 610), self.score)
