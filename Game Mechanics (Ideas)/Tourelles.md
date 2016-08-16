@@ -1,7 +1,7 @@
-## Tourelles
+ï»¿## Tourelles
 
-Il existe différents types et différentes tailles de tourelles. Chaque tourelle est déclinée en 2 tailles (normal et large).
-Une tourelle normale occupe une case du terrain. Une tourelle large occupe 4 cases du terrain (une région de 2*2).
+Il existe diffÃ©rents types et diffÃ©rentes tailles de tourelles. Chaque tourelle est dÃ©clinÃ©e en 2 tailles (normal et large).
+Une tourelle normale occupe une case du terrain. Une tourelle large occupe 4 cases du terrain (une rÃ©gion de 2*2).
 
 ## Liste des tourelles
 
@@ -16,12 +16,12 @@ large missile / 250$ / 35 dmg / Effet de zone. Rechargement lent. Seulement sur 
 laser
 large laser
 
-anti_aérien /
-large anti_aérien /
+anti_aÃ©rien /
+large anti_aÃ©rien /
 
 mortar / Seulement sur mobs terrestres
 large mortar / Seulement sur mobs terrestres
 
 
-shield / / / / un bouclier absorbant les dommages infligés aux tourelles dans son champ d'action
-large shield / / / / un bouclier absorbant les dommages infligés aux tourelles dans son champ d'action
+shield / / / / un bouclier absorbant les dommages infligÃ©s aux tourelles dans son champ d'action
+large shield / / / / un bouclier absorbant les dommages infligÃ©s aux tourelles dans son champ d'action
