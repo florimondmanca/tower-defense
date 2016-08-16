@@ -9,7 +9,7 @@ from copy import copy
 import constants as cst
 from isometric import isoutils
 
-map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
+map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2 + cst.MAP_OFFSET))
 
 def load_image(path_to_image):
     """

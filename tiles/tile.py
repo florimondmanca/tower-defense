@@ -8,6 +8,8 @@ class Tile(IsoSprite):
 	An IsoSprite representing a tile.
 	"""
 	def __init__(self, tile_pos=None, category="none", tile_type=cst.NONE_TILE):
+		if tile_pos is not None:
+			tile_pos = (tile_pos[0] - cst.MAP_WIDTH//2, tile_pos[1] - cst.MAP_WIDTH//2)
 		super().__init__(path_to_image=os.path.join(cst.IMG_DIR, *["tiles", category, tile_type+".png"]), tile_pos=tile_pos)
 
 	def change(self, category, tile_type):
@@ -33,6 +35,8 @@ class Decoration(IsoSprite):
 	An IsoSprite representing a decoration object.
 	"""
 	def __init__(self, tile_pos=None, category="none", deco_type=cst.NONE_TILE):
+		if tile_pos is not None:
+			tile_pos = (tile_pos[0] - cst.MAP_WIDTH//2, tile_pos[1] - cst.MAP_WIDTH//2)
 		super().__init__(path_to_image=os.path.join(cst.IMG_DIR, *["decoration", category, deco_type+".png"]), tile_pos=tile_pos)
 
 	def change(self, category, tile_type):

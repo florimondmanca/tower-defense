@@ -8,16 +8,11 @@ class Map:
 	Ascending X : East
 	Ascending Y : South
 	map.tiles is a dict mapping each position to a Tile object
-	map.deco is a list of Decoration objects
+	map.deco is a list of Decoration objects, sorted by depth
 	"""
 	def __init__(self, tiles=None, deco=None):
-		if tiles is None:
-			fix_x = cst.SCREEN_WIDTH//2 / cst.TILE_SIZE
-			fix_y = cst.SCREEN_HEIGHT//2 / cst.TILE_SIZE
-			self.tiles = dict(((x, y), Tile(pos=(x + fix_x, y + fix_y))) for x in range(cst.MAP_WIDTH) for y in range(cst.MAP_HEIGHT))
-		else:
-			self.tiles = tiles
-		self.deco = deco is None and [] or deco
+		self.tiles = {} if tiles is None else tiles
+		self.deco = [] if deco is None else deco
 
 	@staticmethod
 	def create_plain(category, tile_type):
@@ -106,14 +101,14 @@ class Map:
 		for x in range(cst.MAP_WIDTH):
 			for y in range(cst.MAP_WIDTH):
 				cat, tile_type = tile_types[tiles_symb[x][y]]
-				tiles[x, y] = Tile(tile_pos=(x - cst.MAP_WIDTH//2, y - cst.MAP_WIDTH//2), category=cat, tile_type=tile_type)
+				tiles[x, y] = Tile(tile_pos=(x, y), category=cat, tile_type=tile_type)
 
 		# assign decoration objects to a list
 		deco = []
 		for d in deco_coords :
 			cat, deco_type = deco_types[d[0]]
 			x, y = d[1], d[2]
-			deco.append(Decoration(tile_pos=(x - cst.MAP_WIDTH//2, y - cst.MAP_WIDTH//2), category=cat, deco_type=deco_type))
+			deco.append(Decoration(tile_pos=(x, y), category=cat, deco_type=deco_type))
 		# sort it by depth
 		deco.sort(key=lambda d: d.pos[0] + d.pos[1])
 		# we're done !

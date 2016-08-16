@@ -94,7 +94,8 @@ class Instance:
 					if event.key in key_to_function:
 						key_to_function[event.key](self)
 				elif event.type == pygame.MOUSEBUTTONDOWN :
-					mouse_click = True
+					if event.button in button_to_function:
+						button_to_function[event.button](self)
 
 			self.update(mouse_pos, mouse_click)
 			self.display()
@@ -102,36 +103,3 @@ class Instance:
 
 	def quit(self):
 		self.RUNNING = False
-
-	def pause(self):
-		'''Runs the pause menu '''
-		bg, bg_rect = load_image("bgpause.png")
-		bg_rect.move_ip((100,100))
-		resumeButton = Button("Resume Game", (400,150))
-		menuButton = Button("Back to menu", (400,200))
-		exitButton = Button("Quit Game", (400,250))
-
-		done = False
-		while not done :
-			self.clock.tick(48)
-			screen = pygame.display.get_surface()
-			
-			screen.blit(bg,bg_rect)
-
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					return 1
-				elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-					if menuButton.lit:
-						return 0
-					elif exitButton.lit :
-						return 1
-					elif resumeButton.lit :
-						return 2
-				elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE :
-					return 2
-			menuButton.update(screen)
-			exitButton.update(screen)
-			resumeButton.update(screen)
-
-			pygame.display.flip()
