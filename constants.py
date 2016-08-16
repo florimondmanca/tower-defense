@@ -7,8 +7,10 @@ import os
 
 # ------ Constants ------
 
-# DEBUG VARIABLE
-DEBUG = True
+# OPTION VARIABLES
+DEBUG = False
+SHOW_HEALTH = True
+SHOW_NAME = True
 
 # Filesystem-related constants
 BASE_DIR = os.path.dirname(__file__)
@@ -45,6 +47,11 @@ BLUE = (20, 60, 110)
 RED = (250,0,0)
 GRASS = (139,181,74)
 
+# Health bar colors
+HP_GREEN = (64,214,0)
+HP_ORANGE = (255,167,0)
+HP_RED = (255,0,0)
+
 # Fonts
 pygame.font.init()
 FONT_PATH = os.path.join(FONT_DIR,"speculum.ttf")
@@ -55,6 +62,7 @@ TITLE_FONT = pygame.font.Font(FONT_PATH, 50)
 GUI_TITLE_FONT = pygame.font.Font(FONT_PATH, 25)
 GUI_DESCR_FONT = pygame.font.Font(FONT_PATH, 16)
 SCORE_FONT = pygame.font.Font(FONT_PATH,25)
+NAME_FONT = pygame.font.Font(FONT_PATH,12)
 
 # GUI Constants
 CASE_SIZE = 150  # base size for buttons, messages, etc.

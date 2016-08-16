@@ -20,3 +20,8 @@ class MainTurret(turret.Turret):
 		self.hp = 1000
 		self.money = 400
 		self.score = 0
+
+		# Data redefinition
+		self.name = "Main Tower"
+		self.nameb.change_message(self.name)
+		self.hb.rect.width = 3*self.hb.rect.width

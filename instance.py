@@ -44,17 +44,20 @@ class Instance:
 		self.map = Map.import_map(map_name)
 		self.matrix = [[None for j in range(2*cst.MAP_WIDTH)] for i in range(2*cst.MAP_WIDTH)]
 
+		self.turrets = pygame.sprite.Group()
 		self.player = mainTurret.MainTurret()
-		self.turrets = [self.player]
-		
+		self.turrets.add(self.player)
+
 		# init the mobs
 		self.mobs = pygame.sprite.Group()
 		self.mobs.add(moblist.ChaserMob(tile_pos=(9, 12), target=self.map.tiles[1, 0]))
+		self.mobs.add(moblist.ChaserMob(tile_pos=(12, 9), target=self.map.tiles[5, 2]))
 
 		self.RUNNING = True
 
 	def update(self, mouse_event, mouse_click):
 		self.mobs.update()
+		self.turrets.update()
 		self.gui.update(mouse_event, mouse_click)
 
 	def rotate_all(self, direction):

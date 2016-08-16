@@ -1,7 +1,6 @@
 '''
-Entities class.
-Generic classes representing every entities (mobs and turrets) of the game.
-Classes Turret and Mob inherits from class IsoSprite (juste like the Tile class)
+Turret class.
+Classes Turret and Mob inherits from class Entity
 '''
 
 # ------ Importations ------
@@ -10,14 +9,15 @@ import pygame
 import math
 from isometric import IsoSprite, isoutils
 import constants as cst
+from . import entity
 
 # ------ Turret Class ------
 
-class Turret(IsoSprite):
+class Turret(entity.Entity):
     '''Classe de base des tourelles posables par le joueur '''
 
     def __init__(self, path_to_image, tile_pos):
-        IsoSprite.__init__(self, path_to_image, tile_pos)
+        entity.Entity.__init__(self, path_to_image, tile_pos)
         # game settings
         self.hp = 0
         self.hit_ground = True
@@ -25,7 +25,7 @@ class Turret(IsoSprite):
         self.price = 100
         
     def update(self):
-        pass
+        super().update()
 
     def display(self, screen):
         super().display(screen)

@@ -1,7 +1,6 @@
 '''
-Entities class.
-Generic classes representing every entities (mobs and turrets) of the game.
-Classes Turret and Mob inherits from class IsoSprite (juste like the Tile class)
+Mob class.
+Classes Turret and Mob inherits from class Entity
 '''
 
 # ------ Importations ------
@@ -10,15 +9,15 @@ import pygame
 import math
 from isometric import IsoSprite, isoutils
 import constants as cst
-from . import misc
+from . import misc,entity
 
 # ------ Mob Class ------
 
-class Mob(IsoSprite):
+class Mob(entity.Entity):
     ''' Classe de base des monstres traversant le niveau '''
 
     def __init__(self, path_to_image, tile_pos=None):
-        IsoSprite.__init__(self, path_to_image, tile_pos)
+        entity.Entity.__init__(self, path_to_image, tile_pos)
         self.spritesheet = self.image
         self.anim_key = 0  # 0, 1 or 2 (x on spritesheet)
         self.state = 0  # 0 front, 1 left, 2 right, 3 back (y on spritesheet)
@@ -49,6 +48,7 @@ class Mob(IsoSprite):
         self.image = self.spritesheet.subsurface(mask_rect)
         
     def update(self):
+        super().update()
         # update the animation
         self.anim_counter += 1
         if self.anim_counter == self.anim_speed:
@@ -64,13 +64,11 @@ class Mob(IsoSprite):
         super().display(screen)
         if cst.DEBUG:
             pygame.draw.rect(screen, pygame.Color("blue"), self.rect, 2)
-            pygame.draw.rect(screen, pygame.Color("blue"), self.target.rect, 2)
             pygame.draw.rect(screen, pygame.Color("red"), self.iso_rect, 2)
-            pygame.draw.rect(screen, pygame.Color("red"), self.target.iso_rect, 2)
 
     ## ------ Behavior and AI functions ------
 
-    def find_path(self,obstacles, target):
+    def find_path(self, obstacles, target):
         '''
         find_path(self,obstacles) -> path list
             implementation of the A* algorithm. The heuristic used is the euclidean distance.

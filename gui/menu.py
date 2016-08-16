@@ -24,6 +24,7 @@ class Message(pygame.sprite.Sprite):
 	def __init__(self, msg, pos, font=cst.TEXT_FONT, color=cst.WHITE, center = True):
 		self.text = msg
 		self.font = font
+		self.color = color
 		self.image = font.render(msg, True, color)
 		self.rect = self.image.get_rect()
 		if center :
@@ -31,9 +32,9 @@ class Message(pygame.sprite.Sprite):
 		else :
 			self.rect.topleft = pos
 
-	def change_message(self, new_msg, font=cst.TEXT_FONT, color=cst.WHITE):
+	def change_message(self, new_msg):
 		self.text = new_msg
-		self.image = font.render(new_msg, True, color)
+		self.image = self.font.render(new_msg, True, self.color)
 		self.rect = self.image.get_rect(center=self.rect.center)
 
 	def display(self, bliton=None):
