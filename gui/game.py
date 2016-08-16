@@ -79,10 +79,17 @@ class TurretBar:
 		self.bgrect.topleft = (0, 0)
 
 	def update(self, mouse_event, click_event):
+		selected_turret = None
 		if click_event is not None:
 			for t in self.turrets:
 				t.selected = False
-		self.turrets.update(mouse_event, click_event)
+			self.turrets.update(mouse_event, click_event)
+			for t in self.turrets:
+				if t.selected:
+					selected_turret = t.instanciate()
+		else:
+			self.turrets.update(mouse_event, click_event)
+		return selected_turret
 
 	def display(self, screen):
 		screen.blit(self.bgimg, self.bgrect)
@@ -143,7 +150,7 @@ class TurretButton(pygame.sprite.Sprite):
 	def __init__(self, name="", class_maker=None, large=False, **kwargs):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.data = class_maker()  # la vraie tourelle associée au bouton
+		self.instanciate = class_maker  # a function that instanciates real turrets
 
 		self.preview, self.rect =  misc.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test{}.png".format("_large" if large else "")]))
 		for key, val in kwargs.items():
@@ -202,6 +209,8 @@ class GUI:
 		self.score = 0
 		self.money = 400
 		self.wave = 0
+		self.selected_turret = None  # turret bound to mouse
+		self.undertile = None  # tile under selected_turret
 
 		self.next_wave = menu.Button("Next Wave", (0, 0), font=cst.TEXT_FONT, color=cst.RED)
 		self.next_wave.rect.bottomright = (1270, 710)
@@ -211,8 +220,22 @@ class GUI:
 		self.wave_score = Score("Wave  :", (10, 670), self.wave)
 
 	def update(self, mouse_event, mouse_click):
-		self.turret_bar.update(mouse_event, mouse_click)
+		# place current selected turret if click
+		placed_turret = None
+		if self.selected_turret is not None and mouse_click is not None:
+			placed_turret, self.selected_turret = self.selected_turret, None
+		# assign new selected after update of turret_bar
+		selected_turret = self.turret_bar.update(mouse_event, mouse_click)
+		if selected_turret is not None and mouse_click is not None:
+			self.selected_turret = selected_turret
+			self.selected_turret.iso_pos = mouse_click.pos
+		# move current selected turret with the mouse and report a turret is being placed
+		if self.selected_turret is not None:
+			placed_turret = "placing"
+			if mouse_event is not None:
+				self.selected_turret.iso_pos = mouse_event.pos
 		self.next_wave.update(mouse_event, mouse_click)
+		return {"placed_turret": placed_turret}
 
 	def display(self, screen):
 		self.turret_bar.display(screen)
@@ -220,6 +243,10 @@ class GUI:
 		self.disp_score.display(screen)
 		self.money_score.display(screen)
 		self.wave_score.display(screen)
+		if self.selected_turret is not None:
+			if self.undertile is not None:
+				pygame.draw.polygon(screen, cst.PAPER, [self.undertile.iso_rect.midbottom, self.undertile.iso_rect.midleft, self.undertile.iso_rect.midtop, self.undertile.iso_rect.midright], 1)
+			self.selected_turret.display(screen)
 
 
 class Cursor:
