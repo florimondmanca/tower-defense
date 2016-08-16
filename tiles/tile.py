@@ -1,7 +1,7 @@
 import os
 import constants as cst
 from isometric import IsoSprite, isoutils
-from gui import miscgui
+import gui
 
 class Tile(IsoSprite):
 	"""
@@ -14,7 +14,7 @@ class Tile(IsoSprite):
 
 	def change(self, category, tile_type):
 		"""Changes the tile to a new category and tile_type"""
-		self.image, self.rect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["tiles", category, tile_type+".png"]))
+		self.image, self.rect = gui.misc.load_image(os.path.join(cst.IMG_DIR, *["tiles", category, tile_type+".png"]))
 		self.rect.center = self.iso_pos
 
 	def _update_positions(self, new_pos=None, new_iso_pos=None):
@@ -41,5 +41,5 @@ class Decoration(IsoSprite):
 
 	def change(self, category, tile_type):
 		"""Changes the tile to a new category and tile_type"""
-		self.image, self.rect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["decoration", category, deco_type+".png"]))
+		self.image, self.rect = gui.misc.load_image(os.path.join(cst.IMG_DIR, *["decoration", category, deco_type+".png"]))
 		self.rect.center = self.iso_pos

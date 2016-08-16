@@ -1,7 +1,7 @@
 import pygame
 import constants as cst
 from . import isoutils
-from gui import miscgui
+import gui
 
 class IsoSprite(pygame.sprite.Sprite):
 	"""
@@ -21,7 +21,7 @@ class IsoSprite(pygame.sprite.Sprite):
 		self._pos = (0, 0)
 		self._iso_pos = isoutils.cart_to_iso(self._pos)  # in pixels on isometric (screen) map
 		# get the image, iso_rect and rect
-		self.image, self._iso_rect = miscgui.load_image(path_to_image)
+		self.image, self._iso_rect = gui.misc.load_image(path_to_image)
 		self._rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.iso_rect.size))  # rect on cartesian map, used for collisions
 		new_pos = tile_pos is None and (cst.MAP_OFFSET, cst.MAP_OFFSET) or (cst.TILE_PIXEL_SIZE*tile_pos[0] + cst.MAP_OFFSET, cst.TILE_PIXEL_SIZE*tile_pos[1] + cst.MAP_OFFSET)
 		self._update_positions(new_pos=new_pos)
@@ -81,13 +81,13 @@ class IsoSprite(pygame.sprite.Sprite):
 		"""
 		Rotates the sprite by 90° clockwise around the map center.
 		"""
-		self.pos = miscgui.rotate_left(self.pos)
+		self.pos = gui.misc.rotate_left(self.pos)
 
 	def rotate_right(self):
 		"""
 		Rotates the sprite by 90° anti-clockwise around the map center.
 		"""
-		self.pos = miscgui.rotate_right(self.pos)
+		self.pos = gui.misc.rotate_right(self.pos)
 
 	def __str__(self):
 		return "{} :\n    pos: {}\n    iso_pos: {}\n    rect: {}".format(type(self), self.pos, self.iso_pos, self.rect)
