@@ -44,6 +44,7 @@ class Instance:
 		self.map = Map.import_map(map_name)
 		self.matrix = [[None for j in range(2*cst.MAP_WIDTH)] for i in range(2*cst.MAP_WIDTH)]
 
+		# init turrets
 		self.turrets = pygame.sprite.Group()
 		self.player = mainTurret.MainTurret()
 		self.turrets.add(self.player)
@@ -58,7 +59,23 @@ class Instance:
 	def update(self, mouse_event, mouse_click):
 		self.mobs.update()
 		self.turrets.update()
-		self.gui.update(mouse_event, mouse_click)
+		gui_update_dict = self.gui.update(mouse_event, mouse_click)
+		self.place_turret(mouse_event, mouse_click, gui_update_dict["placed_turret"])
+
+	def place_turret(self, mouse_event, mouse_click, turret):
+		mouse_pos = pygame.mouse.get_pos()
+		if turret is None:
+			return
+		elif turret == "placing":
+			undertile = None
+			for tile in self.map.tiles.values():
+				if isoutils.iso_to_tile(*tile.iso_pos) == isoutils.iso_to_tile(*mouse_pos):
+					undertile = tile
+					break
+			self.gui.undertile = undertile
+		else:
+			turret.iso_pos = isoutils.tile_to_iso(isoutils.iso_to_tile(*mouse_pos))  # clip turret to mouse's pos on tiles map
+			self.turrets.add(turret)
 
 	def rotate_all(self, direction):
 		""" Rotates the map by 90 degrees (clockwise if direction is 'left', counter-clockwise if direction is 'right') """

@@ -17,13 +17,13 @@ def tile_to_cart(*pos):
     if len(pos) == 1:
         pos = pos[0]
     i, j = pos
-    return cst.TILE_SIZE*i, cst.TILE_SIZE*j
+    return cst.TILE_PIXEL_SIZE*i, cst.TILE_PIXEL_SIZE*j
 
 def cart_to_tile(*pos):
     if len(pos) == 1:
         pos = pos[0]
     x, y = pos
-    return x//cst.TILE_SIZE, y//cst.TILE_SIZE
+    return x//cst.TILE_PIXEL_SIZE + 1, y//cst.TILE_PIXEL_SIZE + 1
 
 def iso_to_tile(*pos):
     return cart_to_tile(iso_to_cart(pos))
