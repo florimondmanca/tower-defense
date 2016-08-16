@@ -10,6 +10,7 @@ from tiles.map import Map
 from entities import moblist, turretlist, mainTurret
 from isometric import isoutils
 from gui import *
+import time
 
 # ------ Classe Principale ------
 
@@ -89,15 +90,16 @@ class Instance:
 
 	def run(self):
 		while self.RUNNING:
+			t = time.time()
 			click_event = None
 			mouse_event = None
 			self.clock.tick(cst.FPS)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
-					print("Quit game")
 					return "PYGAME_QUIT"
 				elif event.type == pygame.KEYDOWN:
 					if event.key in key_to_function:
+						print("Using a function after pressing {}".format(event.key))
 						key_to_function[event.key](self)
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					if event.button in (1, 3):
@@ -107,6 +109,7 @@ class Instance:
 			self.update(mouse_event, click_event)
 			self.display()
 			pygame.display.flip()
+			print("FPS =", 1/(time.time()-t))
 
 	def quit(self):
 		self.RUNNING = False

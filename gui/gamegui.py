@@ -41,14 +41,14 @@ class TurretBar:
 		self.bgimg, self.bgrect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
 		self.bgrect.topleft = (0, 0)
 		self.turrets = pygame.sprite.Group()
-		self.turrets.add(GraphicButton((30, cst.ST_Y), None))
-		self.turrets.add(GraphicButton((30, cst.LT_Y), None, large=True))
+		self.turrets.add(TurretButton((30, cst.ST_Y), None))
+		self.turrets.add(TurretButton((30, cst.LT_Y), None, large=True))
 
-		self.turrets.add(GraphicButton((102, cst.ST_Y), None))
-		self.turrets.add(GraphicButton((102, cst.LT_Y), None, large=True))
+		self.turrets.add(TurretButton((102, cst.ST_Y), None))
+		self.turrets.add(TurretButton((102, cst.LT_Y), None, large=True))
 
-		self.turrets.add(GraphicButton((174, cst.ST_Y), None))
-		self.turrets.add(GraphicButton((174, cst.LT_Y), None, large=True))
+		self.turrets.add(TurretButton((174, cst.ST_Y), None))
+		self.turrets.add(TurretButton((174, cst.LT_Y), None, large=True))
 
 	def update(self, mouse_event, click_event):
 		if click_event is not None:
@@ -64,7 +64,7 @@ class TurretBar:
 
 class DescriptionWindow:
 	"""
-	A small window that displays every information about a turret. Linked to a GraphicButton class.
+	A small window that displays every information about a turret. Linked to a TurretButton class.
 	DescriptionWindow(self, datas) -> DescriptionWindow
 		datas = a dict containing entries "preview","title","descr","price", "large"
 	"""
@@ -109,46 +109,32 @@ class DescriptionWindow:
 
 
 
-class GraphicButton(pygame.sprite.Sprite):
+class TurretButton(pygame.sprite.Sprite):
 	'''Bouton de selection d'une tourelle dans la GUI '''
 
-	def __init__(self, topleft, data_number, large = False):
+	def __init__(self, topleft, data_number=None, large=False):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.data = None #La tourelle associée au bouton
+		self.data = None  # la vraie tourelle associée au bouton
 
-		# Image réelle de la tourelle
-		if large :
-			self.preview, self.rect =  miscgui.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test_large.png"])) 
-		else :
-			self.preview, self.rect =  miscgui.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test.png"])) 
+		self.preview, self.rect =  miscgui.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test{}.png".format("_large" if large else "")])) 
 		self.rect.topleft = topleft
 		
 		self.title = "Test"
 		self.price = "100"
 		self.descr = "This is a test"
 
-		d = dict([("title",self.title), 
-				  ("price",self.price),
-				  ("descr",self.descr),
-				  ("large", large), 
-				  ("preview",(copy(self.preview),copy(self.rect)))
-				  ])
+		d = {
+			"title": self.title, 
+			"price": self.price,
+			"descr": self.descr,
+			"large": large,
+			"preview": (copy(self.preview), copy(self.rect)),
+		}
 		self.description_window = DescriptionWindow(d)
 
 		self.hover = False
 		self.selected = False
-
-	def get_color(self, color):
-		"""
-		Returns a color based on whether the button is highlit.
-		"""
-		r, g, b = color
-		if self.hover:
-			r = max(r-90, 0)
-			g = max(g-70, 0)
-			b = max(b-70, 0)
-		return (r, g, b)
 
 	def update(self, mouse_event, click_event):
 		if mouse_event is not None:
@@ -159,13 +145,14 @@ class GraphicButton(pygame.sprite.Sprite):
 			else:
 				if not self.rect.collidepoint(pos):
 					self.hover = False
-			if click_event is not None and click_event.button == 1:
-				if not self.selected:
-					if self.rect.collidepoint(pos):
-						self.selected = True
-				else:
-					if self.rect.collidepoint(pos):
-						self.selected = False
+		if click_event is not None and click_event.button == 1:
+			pos = click_event.pos
+			if not self.selected:
+				if self.rect.collidepoint(pos):
+					self.selected = True
+			else:
+				if self.rect.collidepoint(pos):
+					self.selected = False
 
 	def display(self, screen):
 		screen.blit(self.preview, self.rect)
