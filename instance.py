@@ -80,7 +80,7 @@ class Instance:
 		if cst.DEBUG :
 			# mid-screen lines
 			pygame.draw.line(self.screen, pygame.Color("red"), (self.screen_width//2, 0), (self.screen_width//2, self.screen_height))
-			pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
+			pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2+50), (self.screen_width, self.screen_height//2+50))
 
 	def run(self):
 		while self.RUNNING:

@@ -15,7 +15,7 @@ map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
 
 class Score:
 	def __init__(self, msg, pos, value=0):
-		self.msg = Message(msg, pos)
+		self.msg = menugui.Message(msg, pos)
 		self.l = self.msg.rect.right + 5
 
 		self.val = value
@@ -24,11 +24,14 @@ class Score:
 
 		self.pos = pos
 
-	def update(self, bliton, val=None):
-		if val != None and val != self.val :
+	def update(self, val=None):
+		if val is not None and val != self.val :
 			self.val_msg.changeMessage(str(val))
-		self.val_msg.display(bliton)
-		self.msg.display(bliton)
+
+
+	def display(self, screen = pygame.display.get_surface()):
+		self.val_msg.display(screen)
+		self.msg.display(screen)
 
 
 class TurretBar:
@@ -38,9 +41,14 @@ class TurretBar:
 		self.bgimg,self.bgrect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
 		self.bgrect.topleft = (0,0)
 		self.turrets = pygame.sprite.Group()
-		self.turrets.add(GraphicButton((30,20), None))
-		self.turrets.add(GraphicButton((102,20), None))
-		self.turrets.add(GraphicButton((174,20), None))
+		self.turrets.add(GraphicButton((30,cst.ST_Y), None))
+		self.turrets.add(GraphicButton((30,cst.LT_Y), None, large = True))
+
+		self.turrets.add(GraphicButton((102,cst.ST_Y), None))
+		self.turrets.add(GraphicButton((102,cst.LT_Y), None, large = True))
+
+		self.turrets.add(GraphicButton((174,cst.ST_Y), None))
+		self.turrets.add(GraphicButton((174,cst.LT_Y), None, large = True))
 
 	def update(self, mouse_pos, mouse_click):
 		if mouse_click :
@@ -54,33 +62,55 @@ class TurretBar:
 			t.display(screen)
 
 
+class DescriptionWindow:
+	"""
+	A small window that displays every information about a turret. Linked to a GraphicButton class.
+	DescriptionWindow(self, datas) -> DescriptionWindow
+		datas = a dict containing entries "preview","title","descr","price", "large"
+	"""
+	def __init__(self, datas):
+		self.bg, self.bg_rect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","desc.png"]))
+		self.bg_rect.topleft = (2,102)
+		self.dict = datas
+		self.font = cst.GUI_TURRET_FONT
+
+	def display(self,screen = pygame.display.get_surface()):
+		screen.blit(self.bg, self.bg_rect)
+
+		prev,prev_rect = self.dict["preview"]
+		prev_rect.topleft = (8,108)
+		screen.blit(prev,prev_rect)
+
+		title = self.font.render(self.dict["title"], True, cst.PAPER)
+		title_rect = title.get_rect()
+		title_rect.topleft = (50,108)
+		screen.blit(title,title_rect)
+
 
 class GraphicButton(pygame.sprite.Sprite):
 	'''Bouton de selection d'une tourelle dans la GUI '''
 
-	def __init__(self, topleft, data_number, font=cst.GUI_TURRET_FONT):
+	def __init__(self, topleft, data_number, large = False):
 		pygame.sprite.Sprite.__init__(self)
 
 		self.data = None #La tourelle associée au bouton
-		self.preview, self.preview_rect =  miscgui.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test.png"])) # Image réelle de la tourelle
 
-		self.preview_rect.topleft = topleft
-
-		self.font = cst.GUI_TURRET_FONT
+		# Image réelle de la tourelle
+		if large :
+			self.preview, self.rect =  miscgui.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test_large.png"])) 
+		else :
+			self.preview, self.rect =  miscgui.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test.png"])) 
+		self.rect.topleft = topleft
 		
-		self.text = "Test"
-		self.text_rect = font.render(self.text, True, cst.WHITE).get_rect()
-		self.text_rect.midtop = (self.preview_rect.midbottom[0], self.preview_rect.midbottom[1]+5)
-		
+		self.title = "Test"
 		self.price = "100"
-		self.price_rect = font.render(self.price, True, cst.PAPER).get_rect()
-		self.price_rect.midtop = (self.text_rect.midbottom[0], self.text_rect.midbottom[1]+5)
+		self.descr = "This is a test to prove that penguins actually don't exist anymore"
+
+		d = dict([("title",self.title), ("price",self.price),("descr",self.descr),("preview",(copy(self.preview),copy(self.rect)))])
+		self.description_window = DescriptionWindow(d)
 
 		self.hover = False
 		self.selected = False
-
-		self.rect = self.preview_rect.union(self.text_rect).union(self.price_rect)
-
 
 	def get_color(self, color):
 		"""
@@ -111,16 +141,12 @@ class GraphicButton(pygame.sprite.Sprite):
 
 
 	def display(self, screen = pygame.display.get_surface()):
-		screen.blit(self.preview, self.preview_rect)
-		
-		text = self.font.render(self.text, True, self.get_color(cst.PAPER))
-		screen.blit(text,self.text_rect)
-
-		price = self.font.render(self.price, True, self.get_color(cst.PAPER))
-		screen.blit(price,self.price_rect)
-
+		screen.blit(self.preview, self.rect)
+		if self.hover :
+			self.description_window.display(screen)
 		if self.selected :
 			miscgui.draw_frame(screen, self.rect, cst.YELLOW)
+
 
 class GUI:
 	"""
@@ -132,7 +158,8 @@ class GUI:
 		self.turret_bar = TurretBar()
 		self.score = None
 		self.money = None
-		self.next_wave = menugui.Button("Next Wave", (1100,30), font=cst.TEXT_FONT, color=cst.WHITE)
+		self.next_wave = menugui.Button("Next Wave", (0,0), font=cst.TEXT_FONT, color=cst.RED)
+		self.next_wave.rect.bottomright = (1270,710)
 
 	def update(self, mouse_pos, mouse_click):
 		self.turret_bar.update(mouse_pos, mouse_click)
@@ -141,6 +168,7 @@ class GUI:
 	def display(self,screen = pygame.display.get_surface()):
 		self.turret_bar.display(screen)
 		self.next_wave.display(screen)
+
 
 
 class Cursor(pygame.sprite.Sprite):

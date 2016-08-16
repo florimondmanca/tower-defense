@@ -60,8 +60,9 @@ CREDIT_FONT = pygame.font.Font(FONT_PATH, 22)
 
 TITLE_FONT = pygame.font.Font(FONT_PATH, 50)
 
-GUI_TURRET_FONT = pygame.font.Font(FONT_PATH, 15)
+GUI_TURRET_FONT = pygame.font.Font(FONT_PATH, 18)
 
 # GUI Constants
 
-SPACING = 40 # pixels
+ST_Y = 20 # Small Turret y coordinate
+LT_Y = 55 # Large Turret 
