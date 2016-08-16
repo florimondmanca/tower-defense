@@ -25,7 +25,7 @@ class IsoSprite(pygame.sprite.Sprite):
 		self._rect = pygame.Rect((0, 0), isoutils.iso_to_cart(self.iso_rect.size))  # rect on cartesian map, used for collisions
 		new_pos = tile_pos is None and (0, 0) or (cst.TILE_PIXEL_SIZE*tile_pos[0], cst.TILE_PIXEL_SIZE*tile_pos[1])
 		self._update_positions(new_pos=new_pos)
-		self.iso_pos = (self.iso_pos[0] + cst.SCREEN_WIDTH//2, self.iso_pos[1] + cst.SCREEN_HEIGHT//2+50)
+		self.iso_pos = (self.iso_pos[0] + cst.SCREEN_WIDTH//2, self.iso_pos[1] + cst.SCREEN_HEIGHT//2)
 
 	# protect the pos attribute to help updating iso_pos, rect and iso_rect
 	def get_pos(self):

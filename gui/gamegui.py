@@ -14,12 +14,12 @@ from . import miscgui,menugui
 map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
 
 class Score:
-	def __init__(self, msg, pos, value=0):
-		self.msg = menugui.Message(msg, pos)
+	def __init__(self, msg, pos, value=0, color = cst.RED):
+		self.msg = menugui.Message(msg, pos, color = color, center = False)
 		self.l = self.msg.rect.right + 5
 
 		self.val = value
-		self.val_msg = Message(str(value), pos)
+		self.val_msg = menugui.Message(str(value), pos, color = color, center = False)
 		self.val_msg.rect.left = self.l
 
 		self.pos = pos
@@ -72,19 +72,41 @@ class DescriptionWindow:
 		self.bg, self.bg_rect = miscgui.load_image(os.path.join(cst.IMG_DIR, *["gui","desc.png"]))
 		self.bg_rect.topleft = (2,102)
 		self.dict = datas
-		self.font = cst.GUI_TURRET_FONT
+		self.toblit = []
+
+		prev,prev_rect = self.dict["preview"]
+		prev_rect.topleft = (8,108)
+		self.toblit.append((prev,prev_rect))
+
+		title = cst.GUI_TITLE_FONT.render(self.dict["title"], True, cst.PAPER)
+		title_rect = title.get_rect()
+		title_rect.topleft = (50,108)
+		self.toblit.append((title, title_rect))
+
+		price = cst.GUI_DESCR_FONT.render("Price : " + self.dict["price"], True, cst.PAPER)
+		price_rect = price.get_rect()
+		price_rect.topleft = (8,150)
+		self.toblit.append((price, price_rect))
+
+		if self.dict["large"] :
+			large = cst.GUI_DESCR_FONT.render("Size : Large", True, cst.PAPER)
+		else :
+			large = cst.GUI_DESCR_FONT.render("TSize : Small", True, cst.PAPER)
+		large_rect = large.get_rect()
+		large_rect.topleft = (8,170)
+		self.toblit.append((large, large_rect))
+
+		descr = cst.GUI_DESCR_FONT.render(self.dict["descr"], True, cst.PAPER)
+		descr_rect = descr.get_rect()
+		descr_rect.topleft = (8,190)
+		self.toblit.append((descr, descr_rect))
 
 	def display(self,screen = pygame.display.get_surface()):
 		screen.blit(self.bg, self.bg_rect)
 
-		prev,prev_rect = self.dict["preview"]
-		prev_rect.topleft = (8,108)
-		screen.blit(prev,prev_rect)
+		for s,r in self.toblit :
+			screen.blit(s,r)
 
-		title = self.font.render(self.dict["title"], True, cst.PAPER)
-		title_rect = title.get_rect()
-		title_rect.topleft = (50,108)
-		screen.blit(title,title_rect)
 
 
 class GraphicButton(pygame.sprite.Sprite):
@@ -104,9 +126,14 @@ class GraphicButton(pygame.sprite.Sprite):
 		
 		self.title = "Test"
 		self.price = "100"
-		self.descr = "This is a test to prove that penguins actually don't exist anymore"
+		self.descr = "This is a test"
 
-		d = dict([("title",self.title), ("price",self.price),("descr",self.descr),("preview",(copy(self.preview),copy(self.rect)))])
+		d = dict([("title",self.title), 
+				  ("price",self.price),
+				  ("descr",self.descr),
+				  ("large", large), 
+				  ("preview",(copy(self.preview),copy(self.rect)))
+				  ])
 		self.description_window = DescriptionWindow(d)
 
 		self.hover = False
@@ -148,6 +175,7 @@ class GraphicButton(pygame.sprite.Sprite):
 			miscgui.draw_frame(screen, self.rect, cst.YELLOW)
 
 
+
 class GUI:
 	"""
 	The class that deals with the GUI of the game.
@@ -156,22 +184,33 @@ class GUI:
 
 	def __init__(self):
 		self.turret_bar = TurretBar()
-		self.score = None
-		self.money = None
+		self.score = 0
+		self.money = 400
+		self.wave = 0
+
 		self.next_wave = menugui.Button("Next Wave", (0,0), font=cst.TEXT_FONT, color=cst.RED)
 		self.next_wave.rect.bottomright = (1270,710)
+
+		self.disp_score = Score("Score :",(10,610), self.score)
+		self.money_score = Score("Money :", (10,640), self.money)
+		self.wave_score = Score("Wave  :", (10,670), self.wave)
+
 
 	def update(self, mouse_pos, mouse_click):
 		self.turret_bar.update(mouse_pos, mouse_click)
 		self.next_wave.update(mouse_pos)
 
+
 	def display(self,screen = pygame.display.get_surface()):
 		self.turret_bar.display(screen)
 		self.next_wave.display(screen)
+		self.disp_score.display(screen)
+		self.money_score.display(screen)
+		self.wave_score.display(screen)
 
 
 
-class Cursor(pygame.sprite.Sprite):
+class Cursor:
 	"""
 	A textual cursor which will follow the mouse's moves.
 	:param parent: the Surface which the cursor belongs to.
@@ -193,14 +232,15 @@ class Cursor(pygame.sprite.Sprite):
 			self.selected = obj
 			self.image, self.rect = load_image(self.selected.preview)
 
-	def update(self, mouse_pos, bliton=None):
+	def update(self, mouse_pos):
 		"""
 		Updates the cursor's state, especially brings it to the position of the
 		mouse.
 		"""
-		if bliton == None :
-			bliton = pygame.display.get_surface()
 		x,y = mouse_pos
 		self.rect.topleft = ((x//10)*10, (y//10)*10)
 		if x+self.rect.width < 601 and x>self.rect.width//2:
 			self.parent.blit(self.image, self.rect)
+
+	def display(self, screen = pygame.display.get_surface()):
+		screen.blit(self.image, self.rect)

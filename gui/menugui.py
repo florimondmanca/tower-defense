@@ -19,13 +19,17 @@ class Message(pygame.sprite.Sprite):
 	:param msg: the actual text to display.
 	:param font=TEXT_FONT: font of the message.
 	:param color: color of the message.
+	:param center : if True, pos refers to the rect center. If False, pos refers to the rect topleft corner.
 	'''
-	def __init__(self, msg, center, font=cst.TEXT_FONT, color=cst.WHITE):
+	def __init__(self, msg, pos, font=cst.TEXT_FONT, color=cst.WHITE, center = True):
 		self.text = msg
 		self.font = font
 		self.image = font.render(msg, True, color)
 		self.rect = self.image.get_rect()
-		self.rect.center = center
+		if center :
+			self.rect.center = pos
+		else :
+			self.rect.topleft = pos
 
 	def change_message(self, new_msg, font=cst.TEXT_FONT, color=cst.WHITE):
 		self.text = new_msg

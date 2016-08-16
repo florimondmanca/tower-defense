@@ -30,9 +30,9 @@ def options(screen,clock):
     music_button = menugui.Button("ON", (music_message.rect.right, int(1.5*cst.CASE_SIZE)))
     menu_button = menugui.Button("Back to menu", (hw, int(3.5*cst.CASE_SIZE)))
     credits_message1 = menugui.Message( "Game by Guillaume Coiffier and Florimond Manca",
-        (hw, 4*cst.CASE_SIZE-24-2), font=cst.CREDIT_FONT)
+        (hw, 4*cst.CASE_SIZE), font=cst.CREDIT_FONT)
     credits_message2 = menugui.Message( "Music by Florimond Manca",
-        (hw, 4*cst.CASE_SIZE-12), font=cst.CREDIT_FONT)
+        (hw, 4.5*cst.CASE_SIZE), font=cst.CREDIT_FONT)
 
     while True:
         clock.tick(cst.FPS)
