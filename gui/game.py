@@ -223,12 +223,13 @@ class GUI:
 		# place current selected turret if click
 		placed_turret = None
 		if self.selected_turret is not None and mouse_click is not None:
-			placed_turret, self.selected_turret = self.selected_turret, None
+				placed_turret, self.selected_turret = self.selected_turret, None
 		# assign new selected after update of turret_bar
 		selected_turret = self.turret_bar.update(mouse_event, mouse_click)
 		if selected_turret is not None and mouse_click is not None:
 			self.selected_turret = selected_turret
 			self.selected_turret.iso_pos = mouse_click.pos
+			self.selected_turret.update()
 		# move current selected turret with the mouse and report a turret is being placed
 		if self.selected_turret is not None:
 			placed_turret = "placing"
