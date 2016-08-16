@@ -10,8 +10,16 @@ from copy import copy
 import constants as cst
 from isometric import isoutils
 from . import misc, menu
+from entities import turretlist
 
 map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2))
+number_to_turret = {
+	None: lambda: turretlist.BasicSmall(),
+	0: lambda: turretlist.BasicSmall(),
+	1: lambda: turretlist.BasicLarge(),
+	2: lambda: turretlist.MissileSmall(),
+	3: lambda: turretlist.MissileLarge(),
+}
 
 class Score:
 	def __init__(self, msg, pos, value=0, color = cst.RED):
@@ -115,7 +123,7 @@ class TurretButton(pygame.sprite.Sprite):
 	def __init__(self, topleft, data_number=None, large=False):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.data = None  # la vraie tourelle associée au bouton
+		self.data = number_to_turret[data_number]  # la vraie tourelle associée au bouton
 
 		self.preview, self.rect =  misc.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test{}.png".format("_large" if large else "")])) 
 		self.rect.topleft = topleft
