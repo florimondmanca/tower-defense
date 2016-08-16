@@ -5,6 +5,7 @@
 
 import pygame
 import os
+import inspect
 
 from copy import copy
 import constants as cst
@@ -47,16 +48,35 @@ class TurretBar:
 
 	def __init__(self):
 		self.bgimg, self.bgrect = misc.load_image(os.path.join(cst.IMG_DIR, *["gui","bar.png"]))
-		self.bgrect.topleft = (0, 0)
 		self.turrets = pygame.sprite.Group()
-		self.turrets.add(TurretButton((30, cst.ST_Y), None))
-		self.turrets.add(TurretButton((30, cst.LT_Y), None, large=True))
-
-		self.turrets.add(TurretButton((102, cst.ST_Y), None))
-		self.turrets.add(TurretButton((102, cst.LT_Y), None, large=True))
-
-		self.turrets.add(TurretButton((174, cst.ST_Y), None))
-		self.turrets.add(TurretButton((174, cst.LT_Y), None, large=True))
+		turret_names, turret_classes = zip(*inspect.getmembers(turretlist, inspect.isclass))
+		# fetch distinct turret types
+		turret_types = []
+		for name in turret_names:
+			short = name.replace("Small", "").replace("Large", "")
+			if short not in turret_types:
+				turret_types.append(short)
+		# add turrets of each type and size
+		for i, typ in enumerate(turret_types):
+			if typ+"Small" in turret_names:
+				self.turrets.add(
+					TurretButton(
+						name=typ,
+						class_maker=turret_classes[turret_names.index(typ+"Small")],
+						large=False,
+						center=(48*(i+1), 32)
+					)
+				)
+			if typ+"Large" in turret_names:
+				self.turrets.add(
+					TurretButton(
+						name=typ,
+						class_maker=turret_classes[turret_names.index(typ+"Large")],
+						large=True,
+						center=(48*(i+1), 64)
+					)
+				)
+		self.bgrect.topleft = (0, 0)
 
 	def update(self, mouse_event, click_event):
 		if click_event is not None:
@@ -65,8 +85,8 @@ class TurretBar:
 		self.turrets.update(mouse_event, click_event)
 
 	def display(self, screen):
-		screen.blit(self.bgimg,self.bgrect)
-		for t in self.turrets :
+		screen.blit(self.bgimg, self.bgrect)
+		for t in self.turrets:
 			t.display(screen)
 
 
@@ -78,32 +98,33 @@ class DescriptionWindow:
 	"""
 	def __init__(self, datas):
 		self.bg, self.bg_rect = misc.load_image(os.path.join(cst.IMG_DIR, *["gui","desc.png"]))
-		self.bg_rect.topleft = (2,102)
+		self.bg_rect.topleft = (2, 102)
 		self.dict = datas
 		self.toblit = []
 
-		prev,prev_rect = self.dict["preview"]
-		prev_rect.topleft = (8,108)
-		self.toblit.append((prev,prev_rect))
-
+		# add the preview to blit
+		preview, preview_rect = self.dict["preview"]
+		preview_rect.topleft = (8, 108)
+		self.toblit.append((preview, preview_rect))
+		# add the title to blit
 		title = cst.GUI_TITLE_FONT.render(self.dict["title"], True, cst.PAPER)
 		title_rect = title.get_rect()
-		title_rect.topleft = (50,108)
+		title_rect.topleft = (50, 108)
 		self.toblit.append((title, title_rect))
-
+		# add the price to blit
 		price = cst.GUI_DESCR_FONT.render("Price : " + self.dict["price"], True, cst.PAPER)
 		price_rect = price.get_rect()
-		price_rect.topleft = (8,150)
+		price_rect.topleft = (8, 150)
 		self.toblit.append((price, price_rect))
-
-		if self.dict["large"] :
+		# add size to blit
+		if self.dict["large"]:
 			large = cst.GUI_DESCR_FONT.render("Size : Large", True, cst.PAPER)
-		else :
+		else:
 			large = cst.GUI_DESCR_FONT.render("TSize : Small", True, cst.PAPER)
 		large_rect = large.get_rect()
 		large_rect.topleft = (8,170)
 		self.toblit.append((large, large_rect))
-
+		# add description
 		descr = cst.GUI_DESCR_FONT.render(self.dict["descr"], True, cst.PAPER)
 		descr_rect = descr.get_rect()
 		descr_rect.topleft = (8,190)
@@ -111,26 +132,26 @@ class DescriptionWindow:
 
 	def display(self,screen = pygame.display.get_surface()):
 		screen.blit(self.bg, self.bg_rect)
-
-		for s,r in self.toblit :
-			screen.blit(s,r)
+		for image, rect in self.toblit:
+			screen.blit(image, rect)
 
 
 
 class TurretButton(pygame.sprite.Sprite):
 	'''Bouton de selection d'une tourelle dans la GUI '''
 
-	def __init__(self, topleft, data_number=None, large=False):
+	def __init__(self, name="", class_maker=None, large=False, **kwargs):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.data = number_to_turret[data_number]  # la vraie tourelle associée au bouton
+		self.data = class_maker()  # la vraie tourelle associée au bouton
 
-		self.preview, self.rect =  misc.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test{}.png".format("_large" if large else "")])) 
-		self.rect.topleft = topleft
+		self.preview, self.rect =  misc.load_image(os.path.join(cst.IMG_DIR, *["turrets", "test{}.png".format("_large" if large else "")]))
+		for key, val in kwargs.items():
+			setattr(self.rect, key, val)
 		
-		self.title = "Test"
+		self.title = name
 		self.price = "100"
-		self.descr = "This is a test"
+		self.descr = "This is a {}".format(name)
 
 		d = {
 			"title": self.title, 

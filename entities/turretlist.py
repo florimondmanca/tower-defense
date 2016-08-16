@@ -1,67 +1,44 @@
 # encoding=utf-8
 
 # ------ Importations ------
-
+import os
 import pygame
-import math
+import constants as cst
 from . import turret
 
 # ------ Tourelles ------
 
 '''
 Définir ICI une fonction plussify
+CAUTION : define classes strictly as :
+{Type of turret}{Small/Large}
 '''
 
 class BasicSmall(turret.Turret):
-
 	def __init__(self):
-		turret.Turret.__init__(self,"turret.Turret_base1.png","cannon.png", 1, 50)
-		self.preview = "turret.Turret_base1.png"
-		self.mini = "mini.png"
-		self.name = "Basic S"
+		turret.Turret.__init__(self, os.path.join(cst.IMG_DIR, *["turrets", "test.png"]), tile_pos=(0, 0))
+
 
 class BasicLarge(turret.Turret):
-	
 	def __init__(self):
-		turret.Turret.__init__(self,"turret.Turret_base3.png","cannon.png", 3, 150)
-		self.preview = "turret.Turret_base3.png"
-		self.mini = "mini.png"
-		self.name = "Basic L"
-
+		turret.Turret.__init__(self, os.path.join(cst.IMG_DIR, *["turrets", "test_large.png"]), tile_pos=(0, 0))
 
 
 class MissileSmall(turret.Turret):
-
 	def __init__(self):
-		turret.Turret.__init__(self,"turret.Turret_base1.png","cannon.png", 1, 80)
-		self.preview = "turret.Turret_base1.png"
-		self.mini = "mini.png"
-		self.name = "Missile S"
+		turret.Turret.__init__(self, os.path.join(cst.IMG_DIR, *["turrets", "test.png"]), tile_pos=(0, 0))
 
 
 class MissileLarge(turret.Turret):
-
 	def __init__(self):
-		turret.Turret.__init__(self,"turret.Turret_base3.png","cannon.png", 3, 200)
-		self.preview = "turret.Turret_base3.png"
-		self.mini = "mini.png"
-		self.name = "Missile L"
-
+		turret.Turret.__init__(self, os.path.join(cst.IMG_DIR, *["turrets", "test_large.png"]), tile_pos=(0, 0))
 
 
 class LaserSmall(turret.Turret):
-
 	def __init__(self):
-		turret.Turret.__init__(self,"turret.Turret_base1.png","cannon.png", 1, 250)
-		self.preview = "turret.Turret_base1.png"
-		self.mini = "mini.png"
-		self.name = "Laser S"
+		turret.Turret.__init__(self, os.path.join(cst.IMG_DIR, *["turrets", "test.png"]), tile_pos=(0, 0))
 
 
 class LaserLarge(turret.Turret):
-
 	def __init__(self):
-		turret.Turret.__init__(self,"turret.Turret_base3.png","cannon.png", 3, 500)
-		self.preview = "turret.Turret_base3.png"
-		self.mini = "mini.png"
-		self.name = "Laser L"
+		turret.Turret.__init__(self, os.path.join(cst.IMG_DIR, *["turrets", "test_large.png"]), tile_pos=(0, 0))
