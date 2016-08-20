@@ -44,4 +44,15 @@ def draw_frame(screen, rect, color):
 	pygame.draw.line(screen, color, rect.bottomright, rect.bottomleft)
 	pygame.draw.line(screen, color, rect.bottomleft, rect.topleft)
 
+class FpsCounter:
+	def __init__(self, nframes=50):
+		self.time = 0
+		self.count = 0
+		self.nframes = nframes
 
+	def update(self, t):
+		self.time += t
+		self.count += 1
+		if self.count == self.nframes:
+			print("FPS: {}".format(round(self.nframes/self.time, 3)))
+			self.time = self.count = 0

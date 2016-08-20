@@ -63,18 +63,18 @@ class Instance:
 		self.place_turret(mouse_event, mouse_click, gui_update_dict["placed_turret"])
 
 	def place_turret(self, mouse_event, mouse_click, turret):
-		mouse_pos = pygame.mouse.get_pos()
 		if turret is None:
 			return
-		elif turret == "placing":
+		elif turret == "placing" and mouse_event:
+			# placing a turret and the mouse moved, check for new undertile
 			undertile = None
 			for tile in self.map.tiles.values():
-				if isoutils.iso_to_tile(*tile.iso_pos) == isoutils.iso_to_tile(*mouse_pos):
+				if isoutils.iso_to_tile(*tile.iso_pos) == isoutils.iso_to_tile(*mouse_event.pos):
 					undertile = tile
 					break
 			self.gui.undertile = undertile
-		else:
-			turret.iso_pos = isoutils.tile_to_iso(isoutils.iso_to_tile(*mouse_pos))  # clip turret to mouse's pos on tiles map
+		elif click_event:  # clicked to place turret
+			turret.iso_pos = isoutils.tile_to_iso(isoutils.iso_to_tile(*click_event.pos))  # clip turret to mouse's pos on tiles map
 			self.turrets.add(turret)
 
 	def rotate_all(self, direction):
@@ -108,6 +108,7 @@ class Instance:
 			pygame.draw.line(self.screen, pygame.Color("blue"), (0, self.screen_height//2), (self.screen_width, self.screen_height//2))
 
 	def run(self):
+		fps_counter = gui.misc.FpsCounter(nframes=40)  # handling fps print
 		while self.RUNNING:
 			t = time.time()
 			click_event = None
@@ -128,7 +129,7 @@ class Instance:
 			self.update(mouse_event, click_event)
 			self.display()
 			pygame.display.flip()
-			print("FPS =", 1/(time.time()-t))
+			fps_counter.update(time.time()-t)
 
 	def quit(self):
 		self.RUNNING = False
