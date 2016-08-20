@@ -7,7 +7,7 @@ class Tile(IsoSprite):
     """
     An IsoSprite representing a tile.
     """
-    bright_patch, _ = gui.misc.load_image()
+    bright_patch, _ = gui.misc.load_image("tiles", "misc", "bright.png")
     def __init__(self, tile_pos=None, category="none", tile_type=cst.NONE_TILE):
         if tile_pos is not None:
             tile_pos = (tile_pos[0] - cst.MAP_WIDTH//2, tile_pos[1] - cst.MAP_WIDTH//2)

@@ -4,14 +4,18 @@
 # ------ Imports ------
 
 import pygame
-
+import os
 from copy import copy
 import constants as cst
 from isometric import isoutils
 
 map_center = isoutils.iso_to_cart((cst.SCREEN_WIDTH//2, cst.SCREEN_HEIGHT//2 + cst.MAP_OFFSET))
 
-def load_image_only(*path_to_image):
+def load_image_only(*args):
+    if len(args) == 1:
+        path_to_image = args[0]
+    else:
+        path_to_image = list(args)
     image = pygame.image.load(os.path.join(cst.IMG_DIR, *path_to_image))
     if image.get_alpha() is None:
         image = image.convert()

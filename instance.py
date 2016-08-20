@@ -56,26 +56,28 @@ class Instance:
 
         self.RUNNING = True
 
-    def update(self, mouse_event, mouse_click):
+    def update(self, mouse_event, click_event):
         self.mobs.update()
         self.turrets.update()
-        gui_update_dict = self.gui.update(mouse_event, mouse_click)
-        self.place_turret(mouse_event, mouse_click, gui_update_dict["placed_turret"])
+        gui_update_dict = self.gui.update(mouse_event, click_event)
+        self.place_turret(mouse_event, click_event, gui_update_dict["placed_turret"])
 
-    def place_turret(self, mouse_event, mouse_click, turret):
+    def place_turret(self, mouse_event, click_event, turret):
         if turret is None:
             return
-        elif turret == "placing" and mouse_event:
-            # placing a turret and the mouse moved, check for new undertile
-            undertile = None
-            for tile in self.map.tiles.values():
-                if isoutils.iso_to_tile(*tile.iso_pos) == isoutils.iso_to_tile(*mouse_event.pos):
-                    undertile = tile
-                    break
-            self.gui.undertile = undertile
+        elif turret == "placing":
+            if mouse_event:
+                # placing a turret and the mouse moved, check for new undertile
+                undertile = None
+                for tile in self.map.tiles.values():
+                    if isoutils.iso_to_tile(*tile.iso_pos) == isoutils.iso_to_tile(*mouse_event.pos):
+                        undertile = tile
+                        break
+                self.gui.undertile = undertile
         elif click_event:  # clicked to place turret
             turret.iso_pos = isoutils.tile_to_iso(isoutils.iso_to_tile(*click_event.pos))  # clip turret to mouse's pos on tiles map
             self.turrets.add(turret)
+            self.gui.undertile = None
 
     def rotate_all(self, direction):
         """ Rotates the map by 90 degrees (clockwise if direction is 'left', counter-clockwise if direction is 'right') """
@@ -93,13 +95,13 @@ class Instance:
         self.screen.fill(cst.PAPER)
         for tile in self.map.get_tiles():
             tile.display(self.screen)
+        self.gui.display(self.screen)
         for deco in self.map.deco:
             deco.display(self.screen)
         for mob in self.mobs:
             mob.display(self.screen)
         for turret in self.turrets:
             turret.display(self.screen)
-        self.gui.display(self.screen)
 
         # DEBUG
         if cst.DEBUG :
