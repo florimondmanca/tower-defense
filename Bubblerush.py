@@ -4,7 +4,7 @@
 import os, sys
 
 if os.getcwd() not in sys.path :
-	sys.path.append(os.getcwd())
+    sys.path.append(os.getcwd())
 
 from mainmenu import run_game
 
