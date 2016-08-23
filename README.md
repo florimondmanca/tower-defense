@@ -1,9 +1,10 @@
-# MC Tower Defense
+﻿# MC Tower Defense
 _A cool Python game about defending a tower.  
 All your base are belong to us._
 
 ## To-do list
 
+- [ ] Relier le GUI aux différentes variables du jeu (matrice d'obstacles, score, monnaie, compteur de vagues)
 - [ ] Implémenter le depth-sorting pour tous les sprites (et l'optimiser).
 - [ ] Commencer à réfléchir/implémenter le game engine pour tester le comportement des ennemis (une simple vague de test suffit).
 - [ ] Implémenter les différents types de mobs
