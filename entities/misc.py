@@ -35,7 +35,6 @@ class HealthBar:
     def __init__(self, max_val, pos):
         self.max_val = max_val
         self.cur_val = max_val
-
         self.rect = pygame.Rect(0,0,32,5)
 
     def get_color(self):

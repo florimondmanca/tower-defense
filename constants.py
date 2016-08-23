@@ -22,7 +22,7 @@ FONT_DIR = os.path.join(BASE_DIR, *["static","fonts"])
 MAP_EXT = ".map"
 
 # Screen and clock
-FPS = 60
+FPS = 40
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280,720
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 SCREEN = pygame.display.set_mode(SCREEN_SIZE)
@@ -34,7 +34,8 @@ MAP_OFFSET = 50  # pixels, offset due to GUI
 
 # Map-system-related constants
 NONE_TILE = "none"  # the name of the blank tile (must be in terrain folder)
-NONE_TILE_PATH = os.path.join(IMG_DIR, *["tiles", "none", "none.png"])
+NONE_TILE_PATH = os.path.join(IMG_DIR, *["tiles", "misc", "none.png"])
+BRIGHT_TILE_PATH = os.path.join(IMG_DIR, *["tile", "misc", "bright.png"])
 
 # Colors
 PAPER = (244, 234, 200)  #(255, 245, 168)
@@ -66,5 +67,5 @@ NAME_FONT = pygame.font.Font(FONT_PATH,12)
 
 # GUI Constants
 CASE_SIZE = 150  # base size for buttons, messages, etc.
-ST_Y = 20 # Small Turret y coordinate
-LT_Y = 55 # Large Turret 
+SMALL_TURRET_Y = 20 # Small Turret y coordinate
+LARGE_TURRET_Y = 55 # Large Turret 

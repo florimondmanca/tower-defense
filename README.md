@@ -2,6 +2,12 @@
 _A cool Python game about defending a tower.  
 All your base are belong to us._
 
+## To-do list
+
+- [ ] Implémenter le depth-sorting pour tous les sprites (et l'optimiser).
+- [ ] Commencer à réfléchir/implémenter le game engine pour tester le comportement des ennemis (une simple vague de test suffit).
+- [ ] Implémenter les différents types de mobs
+
 
 ## Principes de base du Tower Defense.
 
